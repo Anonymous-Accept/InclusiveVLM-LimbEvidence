@@ -1,0 +1,6 @@
+policy_version: 1.1.0
+template: >-
+  Describe the visible limb-related cue or cues in this image in free-form
+  natural language. If multiple cues are visible, list them separated by
+  commas. If no limb-related cue is visible, answer: none visible
+max_instruction_tokens: 80

@@ -1,0 +1,68 @@
+policy_version: 1.1.0
+aliases:
+  left:
+    - lhs
+    - on the left
+    - left side
+  right:
+    - rhs
+    - on the right
+    - right side
+  upper_arm:
+    - upper arm
+    - upper-arm
+    - humerus area
+    - above-elbow
+    - above elbow
+    - proximal arm
+    - upper arm area
+  forearm:
+    - fore arm
+    - forearm
+    - lower arm
+    - below-elbow
+    - below elbow
+    - distal arm
+    - lower arm area
+  thigh:
+    - upper leg
+    - femur region
+    - thigh
+    - above-knee
+    - above knee
+    - upper leg area
+    - proximal leg
+  calf:
+    - lower leg
+    - shank
+    - calf
+    - below-knee
+    - below knee
+    - lower leg area
+    - shin area
+  residual_limb:
+    - residual
+    - stump
+    - residual arm
+    - residual leg
+    - amputated limb
+    - amputated arm
+    - amputated leg
+    - amputation site
+    - limb stump
+    - residual extremity
+  prosthesis:
+    - prosthetic limb
+    - artificial limb
+    - artificial leg
+    - artificial arm
+    - prosthesis
+    - prosthetic
+    - prosthetic arm
+    - prosthetic leg
+    - prosthetic device
+  none_visible:
+    - none
+    - no visible cue
+    - not visible
+    - none visible

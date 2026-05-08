@@ -1,0 +1,14 @@
+google-genai>=1.0
+matplotlib>=3.7
+numpy>=1.24
+openai>=1.0
+pillow>=10.0
+python-dotenv>=1.0
+PyYAML>=6.0
+rich>=13.0
+scipy>=1.10
+tqdm>=4.65
+
+# Optional for local open-weight VLM serving:
+# transformers>=4.40
+# vllm>=0.6

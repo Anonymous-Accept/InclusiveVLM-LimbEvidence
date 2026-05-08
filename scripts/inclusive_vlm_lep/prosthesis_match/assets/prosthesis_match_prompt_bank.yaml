@@ -1,0 +1,138 @@
+version: prosthesis_match_prompt_bank_v2
+language: en
+task: Prosthesis Matching (benchmark-defined compatibility-style visual option matching)
+
+# Frozen version policy:
+# - This prompt bank is frozen and versioned; bump `version` (e.g., v3) when adding or modifying prompts.
+# - Items are built offline: the builder selects a template_id from this bank (by seed) and writes it into each item.
+# - Inference only reads the template_id already embedded in items; no runtime prompt sampling.
+# - Automatic generation is for offline expansion only; freeze into a new version before official benchmarking.
+
+# v2 Changes:
+# - Support variable number of correct answers (0-8, where 8 = all options match)
+# - Output format changed to JSON array: {"choices": ["A", "B"]} or {"choices": []} for none
+# - Prompts updated to reflect that zero, one, or multiple options may match
+
+output_contract:
+  format: json_one_line
+  schema:
+    choices: OPTION_ID_ARRAY
+  allowed_choice_placeholder: "{ALLOWED_CHOICES}"
+  rules:
+    - Return exactly one JSON object on a single line.
+    - Do not use markdown fences.
+    - Do not include any text outside JSON.
+    - Zero or more options may match the visible limb deficiency.
+    - 'If no option matches, return {"choices": []}.'
+    - 'If one option matches, return {"choices": ["X"]}.'
+    - If multiple options match, return all matching IDs.
+  allow_zero_matches: true
+  allow_multiple_matches: true
+  example_none: '{"choices":[]}'
+  example_single: '{"choices":["B"]}'
+  example_multiple: '{"choices":["A","C","F"]}'
+
+placeholders:
+  ALLOWED_CHOICES: Comma-separated option IDs, e.g., A,B,C,D,E,F,G,H
+  OPTION_LIST: Rendered in the user prompt with IDs and (option images or brief text).
+prompts:
+  - id: pos_select_001
+    text: 'Select all prosthesis options that match the affected limb region visible in the person image. Use only what you can see. There may be zero, one, or multiple matching options. Reply as one-line JSON: {{"choices":["A","B"]}} or {{"choices":[]}} if none match.'
+  - id: pos_select_002
+    text: 'From the option images, pick all prostheses that match the benchmark-defined visible evidence in the person image. If none match, return an empty list. Output only JSON: {{"choices":["A"]}} or {{"choices":[]}}.'
+  - id: pos_select_003
+    text: Look at the person image. Choose all options whose limb region (arm/leg, upper/lower) matches the visible affected or residual limb. Return JSON with a list of matching option IDs, or an empty list if none match.
+  - id: pos_select_004
+    text: Match the person image to prosthesis options. The match is based on limb segment (upper/lower arm or upper/lower leg). Pick all matching option IDs. Output JSON only.
+  - id: pos_select_005
+    text: Choose all prosthesis options that align with the visible affected limb region in the person image. Use visible cues only. Return all matches as a JSON array, or empty array if none.
+  - id: pos_select_006
+    text: 'Identify the affected limb region shown. Then select all options belonging to that same segment category. Reply with JSON only: {{"choices":["A","C"]}} or {{"choices":[]}}.'
+  - id: pos_select_007
+    text: Pick all options that match the benchmark-defined visible evidence for the limb difference. If none match, return an empty list. Output a single-line JSON object.
+  - id: pos_select_008
+    text: Based on the person image, select all prosthesis options that match the affected limb segment. Do not add explanations. Return JSON with choices array.
+  - id: pos_select_009
+    text: Choose all prosthesis options that correspond to the visible residual limb level (segment category only). If no options match, return empty list. JSON only.
+  - id: pos_select_010
+    text: Select all matching prosthesis options for the affected limb region in the person image. Use only visible evidence. Output JSON with choices array.
+  - id: pos_select_011
+    text: From options A–H, choose all that match the limb region visible as affected or residual. If none match, return empty list. Respond with JSON only.
+  - id: pos_select_012
+    text: Decide which limb segment is affected in the person image (arm/leg and upper/lower). Choose all options with the same segment label. Output JSON only.
+  - id: pos_select_013
+    text: Pick all option IDs whose prosthesis segment matches the visible limb deficiency. No extra words. JSON only with choices array.
+  - id: pos_select_014
+    text: Choose all options that match the visible limb segment difference. Return JSON array with all matches, or empty array if none. JSON only.
+  - id: pos_select_015
+    text: Select all prosthesis options that match the affected limb region shown. Do not infer anything not visible. Reply with JSON choices array.
+  - id: pos_select_016
+    text: Look only at visible cues. Choose all options that match the affected limb region. Output JSON with list of matching IDs or empty list.
+  - id: pos_select_017
+    text: Choose all options that match the affected limb segment in the image. Return {{"choices":["A","B"]}} format. Empty list if no match.
+  - id: pos_select_018
+    text: Pick all options that match the affected or residual limb-region category. JSON array format, empty if none match.
+  - id: pos_select_019
+    text: Select all prosthesis options that best match the affected limb region seen. No explanation. JSON choices array only.
+  - id: pos_select_020
+    text: Match the person image to prosthesis options by segment (upper/lower arm or upper/lower leg). Choose all matches. Output JSON only.
+  - id: pos_select_021
+    text: Choose all options whose prosthesis corresponds to the affected segment visible in the person image. Return JSON with choices array. Empty if none.
+  - id: pos_select_022
+    text: From the options, select all that align with the visible limb segment deficiency. Return JSON array of matching IDs.
+  - id: pos_select_023
+    text: Pick all options that match the affected limb region category shown in the person image. Output JSON choices array.
+  - id: pos_select_024
+    text: Select all option IDs for prostheses that match the affected segment visible. Reply with JSON choices array only.
+  - id: pos_select_025
+    text: Find the affected limb segment from the person image. Choose all matching prosthesis options. Output JSON with choices array or empty list.
+  - id: pos_select_026
+    text: Choose all options that match the visible limb segment level. JSON array format. Empty array if none match.
+  - id: pos_select_027
+    text: Pick all prosthesis options that are consistent with the visible residual limb segment. No reasoning text. JSON choices array only.
+  - id: pos_select_028
+    text: Select all matching options based on the visible affected limb region. Return JSON array. Empty if no matches.
+  - id: pos_select_029
+    text: Choose all options whose segment label matches the visible deficiency. Return JSON choices array only.
+  - id: pos_select_030
+    text: 'Pick all options corresponding to the affected limb segment in the person image. Output JSON: {{"choices":["A"]}} or {{"choices":[]}}.'
+  - id: pos_select_031
+    text: Select all prosthesis options matching the affected limb segment category. JSON choices array. Empty array if none match.
+  - id: pos_select_032
+    text: From options A–H, pick all prostheses matching the visible affected limb region. Respond with JSON choices array.
+  - id: pos_select_033
+    text: Choose all options that match the visible limb evidence under the benchmark definition. Output JSON choices array only.
+  - id: pos_select_034
+    text: Select all options matching the visible affected or residual limb region. Return JSON with all matching IDs or empty array.
+  - id: pos_select_035
+    text: Pick all options that match the affected or residual limb region. Return JSON choices array only.
+  - id: pos_select_036
+    text: Choose all prosthesis options that align with the affected segment visible in the image. Output JSON choices array.
+  - id: pos_select_037
+    text: Select all options that match the segment category of the visible limb deficiency. JSON choices array. Empty if none match.
+  - id: pos_select_038
+    text: Choose all options by segment match only. Do not explain. Output JSON with choices array.
+  - id: pos_select_039
+    text: Pick all options that match the affected limb segment seen in the person image. JSON choices array only.
+  - id: pos_select_040
+    text: Select all options whose prosthesis segment matches what is visible in the person image. JSON choices array. Empty if none.
+  - id: pos_select_041
+    text: Choose all matching option IDs for the visible affected limb region. Output {{"choices":["A","B"]}} format.
+  - id: pos_select_042
+    text: Pick all options that match the visible limb segment deficiency. No extra text. JSON choices array only.
+  - id: pos_select_043
+    text: Select all prosthesis options corresponding to the affected segment in the person image. Return JSON choices array.
+  - id: pos_select_044
+    text: Choose all options based on the visible limb segment (arm/leg, upper/lower). JSON choices array. Empty array if none.
+  - id: pos_select_045
+    text: Pick all options that match the affected limb segment. Output JSON object with choices array only.
+  - id: pos_select_046
+    text: Select all option IDs that match the affected limb region seen. Do not add words outside JSON. Choices array format.
+  - id: pos_select_047
+    text: Choose all prosthesis options matching the visible limb segment level. JSON choices array. Empty list if none match.
+  - id: pos_select_048
+    text: Pick all options matching the affected segment visible in the person image. Reply with JSON choices array only.
+  - id: pos_select_049
+    text: Select all matching prosthesis options for the visible limb segment deficiency. Output JSON choices array only.
+  - id: pos_select_050
+    text: "Select all matching prosthesis options for the visible limb segment deficiency. Output JSON choices array only."

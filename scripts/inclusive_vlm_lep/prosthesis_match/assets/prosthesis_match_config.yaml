@@ -1,0 +1,178 @@
+# Prosthesis Matching Configuration
+# Prosthesis Matching benchmark-defined compatibility-style visual option matching
+# Version: 0.1
+
+# ---------------------------------------------------------------------------
+# Dataset configuration
+# ---------------------------------------------------------------------------
+dataset_root: data/inclusive_vlm_lep
+annotation_path: data/inclusive_vlm_lep/annotations/full_dataset.json
+image_root: data/inclusive_vlm_lep/images
+
+# Label mappings (category IDs from InclusiveVLM-LEP)
+label_map:
+  # Prosthesis categories (all types: articulated, functional, cosmetic)
+  prosthesis:
+    # Left upper arm
+    - 30 # left-upper-arm-articulated-pro
+    - 32 # left-upper-arm-functional-pro
+    - 34 # left-upper-arm-cosmetic-pro
+    # Right upper arm
+    - 31 # right-upper-arm-articulated-pro
+    - 33 # right-upper-arm-functional-pro
+    - 35 # right-upper-arm-cosmetic-pro
+    # Left forearm
+    - 36 # left-forearm-articulated-pro
+    - 38 # left-forearm-functional-pro
+    - 40 # left-forearm-cosmetic-pro
+    # Right forearm
+    - 37 # right-forearm-articulated-pro
+    - 39 # right-forearm-functional-pro
+    - 41 # right-forearm-cosmetic-pro
+    # Left thigh
+    - 42 # left-thigh-articulated-pro
+    - 44 # left-thigh-functional-pro
+    - 46 # left-thigh-cosmetic-pro
+    # Right thigh
+    - 43 # right-thigh-articulated-pro
+    - 45 # right-thigh-functional-pro
+    - 47 # right-thigh-cosmetic-pro
+    # Left calf
+    - 48 # left-calf-articulated-pro
+    - 50 # left-calf-functional-pro
+    - 52 # left-calf-cosmetic-pro
+    # Right calf
+    - 49 # right-calf-articulated-pro
+    - 51 # right-calf-functional-pro
+    - 53 # right-calf-cosmetic-pro
+
+  # 8-part limb mapping
+  left_arm_upper:
+    - 8 # left-upper-arm (natural)
+    - 30 # left-upper-arm-articulated-pro
+    - 32 # left-upper-arm-functional-pro
+    - 34 # left-upper-arm-cosmetic-pro
+    - 54 # left-upper-arm-residual
+
+  left_arm_lower:
+    - 10 # left-forearm (natural)
+    - 36 # left-forearm-articulated-pro
+    - 38 # left-forearm-functional-pro
+    - 40 # left-forearm-cosmetic-pro
+    - 56 # left-forearm-residual
+
+  right_arm_upper:
+    - 9 # right-upper-arm (natural)
+    - 31 # right-upper-arm-articulated-pro
+    - 33 # right-upper-arm-functional-pro
+    - 35 # right-upper-arm-cosmetic-pro
+    - 55 # right-upper-arm-residual
+
+  right_arm_lower:
+    - 11 # right-forearm (natural)
+    - 37 # right-forearm-articulated-pro
+    - 39 # right-forearm-functional-pro
+    - 41 # right-forearm-cosmetic-pro
+    - 57 # right-forearm-residual
+
+  left_leg_upper:
+    - 19 # left-thigh (natural)
+    - 42 # left-thigh-articulated-pro
+    - 44 # left-thigh-functional-pro
+    - 46 # left-thigh-cosmetic-pro
+    - 58 # left-thigh-residual
+
+  left_leg_lower:
+    - 21 # left-calf (natural)
+    - 48 # left-calf-articulated-pro
+    - 50 # left-calf-functional-pro
+    - 52 # left-calf-cosmetic-pro
+    - 60 # left-calf-residual
+
+  right_leg_upper:
+    - 20 # right-thigh (natural)
+    - 43 # right-thigh-articulated-pro
+    - 45 # right-thigh-functional-pro
+    - 47 # right-thigh-cosmetic-pro
+    - 59 # right-thigh-residual
+
+  right_leg_lower:
+    - 22 # right-calf (natural)
+    - 49 # right-calf-articulated-pro
+    - 51 # right-calf-functional-pro
+    - 53 # right-calf-cosmetic-pro
+    - 61 # right-calf-residual
+
+  # Residual limb categories
+  residual_limb:
+    - 54 # left-upper-arm-residual
+    - 55 # right-upper-arm-residual
+    - 56 # left-forearm-residual
+    - 57 # right-forearm-residual
+    - 58 # left-thigh-residual
+    - 59 # right-thigh-residual
+    - 60 # left-calf-residual
+    - 61 # right-calf-residual
+
+# ---------------------------------------------------------------------------
+# Options pool construction
+# ---------------------------------------------------------------------------
+options_pool:
+  output_dir: outputs/inclusive_vlm_lep/prosthesis_matching/options
+  min_area: 400 # Minimum prosthesis area in pixels
+  pad_px: 10 # Padding around bounding box
+  out_size: 336 # Output image size (square)
+  max_aspect_ratio: 4.0 # Maximum aspect ratio
+  min_aspect_ratio: 0.25 # Minimum aspect ratio
+
+# ---------------------------------------------------------------------------
+# Benchmark items construction
+# ---------------------------------------------------------------------------
+items:
+  output_path: outputs/inclusive_vlm_lep/prosthesis_matching/items/prosthesis_match.jsonl
+  k_options: 8 # Number of options per item
+  mode: instance_split # instance_split or multi_answer
+  include_prosthesis_targets: true
+  include_residual_targets: true
+  negatives:
+    hard_negative_ratio: 0.5 # Ratio of hard negatives (same limb, different segment)
+  grid:
+    enabled: true
+    grid_cols: 4
+    output_dir: outputs/inclusive_vlm_lep/prosthesis_matching/grids
+
+# ---------------------------------------------------------------------------
+# Inference settings
+# ---------------------------------------------------------------------------
+inference:
+  output_json_only: true
+  choice_key: choice
+  allowed_choices: ["A", "B", "C", "D", "E", "F", "G", "H"]
+  max_tokens: 256
+  temperature: 0.0
+  system_prompt: |
+    You are a visual analysis assistant. Your task is to analyze images and
+    select the most appropriate option based on visual evidence.
+
+    Rules:
+    - Only use visible cues from the images.
+    - Do not infer health status, identity, or private attributes.
+    - Choose exactly one option.
+    - Output your answer as strict JSON in a single line.
+    - Do not include any markdown formatting or extra text.
+
+# ---------------------------------------------------------------------------
+# Evaluation settings
+# ---------------------------------------------------------------------------
+evaluation:
+  metrics:
+    - accuracy
+    - parse_error_rate
+    - confusion_matrix
+    - per_part_accuracy
+  output_dir: outputs/inclusive_vlm_lep/prosthesis_matching/runs
+
+# ---------------------------------------------------------------------------
+# Reproducibility
+# ---------------------------------------------------------------------------
+seed: 42

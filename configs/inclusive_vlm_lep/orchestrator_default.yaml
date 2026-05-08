@@ -1,0 +1,23 @@
+seed: 0
+policy_version: "1.1.0"
+metrics_root: "outputs/inclusive_vlm_lep/metrics"
+baselines_root: "outputs/inclusive_vlm_lep/baselines"
+findings_root: "outputs/inclusive_vlm_lep/findings"
+output_report: "outputs/inclusive_vlm_lep/main_results.md"
+models: []
+variants:
+  presence:
+    subset_jsonl: "data/inclusive_vlm_lep/limb_evidence_grounding/queries_v2.jsonl"
+    predictions_root: "outputs/inclusive_vlm_lep/limb_evidence_grounding/runs"
+  attribution_constrained:
+    subset_jsonl: "data/inclusive_vlm_lep/limb_evidence_grounding/queries_v2.jsonl"
+    predictions_root: "outputs/inclusive_vlm_lep/limb_evidence_grounding/runs"
+  compatibility_diversity:
+    subset_jsonl: "data/inclusive_vlm_lep/prosthesis_match/items/prosthesis_match.jsonl"
+    predictions_root: "outputs/inclusive_vlm_lep/prosthesis_matching/runs/{model}/compatibility_diversity"
+  compatibility_category:
+    subset_jsonl: "data/inclusive_vlm_lep/prosthesis_match/items/compatibility_category.jsonl"
+    predictions_root: "outputs/inclusive_vlm_lep/prosthesis_matching/runs/{model}/compatibility_category"
+  attribution_freeform:
+    subset_jsonl: "data/inclusive_vlm_lep/freeform/freeform_queries.jsonl"
+    predictions_root: "outputs/inclusive_vlm_lep/freeform/runs"
