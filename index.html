@@ -3,14 +3,235 @@
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <meta name="description" content="Anonymous project page for InclusiveVLM-LEP, a test-only human-calibrated benchmark for limb-evidence preservation in vision-language models.">
-  <title>Seeing Is Not Enough | InclusiveVLM-LEP</title>
+  <meta name="description" content="Anonymous project page for InclusiveVLM-LimbEvidence, a test-only benchmark that evaluates vision-language models on open-world images of individuals with limb deficiencies. Includes the main results and a reviewer Q&amp;A.">
+  <meta name="robots" content="noindex, nofollow">
+  <title>InclusiveVLM-LimbEvidence</title>
+  <link rel="alternate" type="text/markdown" href="benchmark_qa.md" title="Reviewer Q&amp;A (plain text)">
+  <script type="application/ld+json">
+{
+ "@context": "https://schema.org",
+ "@type": "FAQPage",
+ "name": "Questions about InclusiveVLM-LimbEvidence",
+ "mainEntity": [
+  {
+   "@type": "Question",
+   "name": "What is the main contribution of InclusiveVLM-LimbEvidence?",
+   "acceptedAnswer": {
+    "@type": "Answer",
+    "text": "InclusiveVLM-LimbEvidence makes specific visual errors measurable for individuals with limb deficiencies. It combines new evidence annotations with separate evaluations of detection, body-region attribution, and compatibility-style structured decisions. The main tables cover 21 model variants from six general-purpose vision-language model (VLM) families. The highest model Constrained Attribution score is 29.4% set mIoU, a label-overlap measure, compared with a human reference of 83.4%. Low complete-set recovery also appears across families. Paired output formats, inference-style comparisons, a medical-domain control, and component diagnostics help explain these results. This connects population coverage to concrete questions in visual grounding, spatial assignment, and set prediction, giving researchers defined targets for improving visual AI for individuals with limb deficiencies. (Paper: Sections 1 and 4, Tables 1, 2, 4, 5, and 6, Appendix D.1.)"
+   }
+  },
+  {
+   "@type": "Question",
+   "name": "How does this resource differ from LDPose and other inclusive vision benchmarks?",
+   "acceptedAnswer": {
+    "@type": "Answer",
+    "text": "We reuse LDPose images and add benchmark-specific masks for residual limbs and prosthetic devices, body-region labels, body-device records, prompts, and evaluation targets. LDPose primarily evaluates pose estimation, while ProGait supports video-based perception and gait analysis. Counterfactual depiction studies examine how model responses change between depictions. InclusiveVLM-LimbEvidence instead checks whether a language-based answer agrees with the visible limb evidence and target for the evaluated image. These resources address complementary questions about body representation, response variation, and image-specific correctness. (Paper: Section 2.1, Section 3.3, Appendices A.1 and A.2.)"
+   }
+  },
+  {
+   "@type": "Question",
+   "name": "Why separate Presence, Attribution, and Compatibility?",
+   "acceptedAnswer": {
+    "@type": "Answer",
+    "text": "Each requirement asks for information that the preceding description alone cannot supply. LimbEvidence-Presence asks which evidence types are visible. Detecting a prosthetic device does not identify the body region or side to which it belongs, which motivates LimbEvidence-Attribution. Identifying that region still does not establish whether a model can match the visible configuration to candidate devices, which motivates LimbEvidence-Compatibility. Constrained and FreeForm are parallel Attribution formats. Category and Diversity are parallel Compatibility probes. The tasks are evaluated separately, so the progression describes additional requirements rather than a pipeline that passes one model answer into the next task. (Paper: Section 3.1, Figure 1, Appendix B.1.)"
+   }
+  },
+  {
+   "@type": "Question",
+   "name": "Who defined the probes, and what professional input informed the annotations?",
+   "acceptedAnswer": {
+    "@type": "Answer",
+    "text": "The authors defined the probes from observed errors in VLM prototypes for preparing visual evidence in Paralympic athlete classification workflows. The evaluation targets were fixed before the new annotations were created. An International Paralympic Committee certified classifier supported annotation guidance and case adjudication. This contribution concerns the interpretation of visual evidence within the annotation process. Probe selection remained an author responsibility. The project did not conduct formal participatory co-design, and the manuscript distinguishes these roles rather than describing the benchmark as a complete clinical capability taxonomy. (Paper: Section 3.1, Section 3.3, Appendices B.1 and B.4.)"
+   }
+  },
+  {
+   "@type": "Question",
+   "name": "What do limb evidence and Attribution mean here?",
+   "acceptedAnswer": {
+    "@type": "Answer",
+    "text": "Limb evidence means visible residual-limb or prosthetic-device regions and their annotated relation to the body. Attribution assigns each evidence type to a body region and side, such as left-thigh prosthetic-device evidence. The vocabulary covers upper arm, forearm, thigh, and calf on each side, crossed with the two evidence types. Left and right refer to the depicted individual. Residual-limb and prosthetic-device masks can occupy different pixels within the same segment. Models predict labels rather than mask coordinates. Unseen anatomy and intact-limb labels are outside the annotation target. (Paper: Section 3.3, Appendices B.3 and B.5.)"
+   }
+  },
+  {
+   "@type": "Question",
+   "name": "What do the dataset counts represent?",
+   "acceptedAnswer": {
+    "@type": "Answer",
+    "text": "The benchmark contains 16,850 source images. Presence and Constrained Attribution each contain 26,406 prompts over 8,802 images, giving 52,812 direct evidence queries. Category contains 8,048 instances and Diversity contains 12,616 instances over 8,048 images, giving 20,664 Compatibility instances. FreeForm is a separate diagnostic on 500 paired image-target items. These are counts of images and evaluation records, not distinct people. Filtering removes near-duplicates, but image counts do not establish person-disjoint evaluation or demographic representativeness. The results describe the evaluated open-world image collection. (Paper: Section 3.2, Table 3, Appendices B.2 and D.3.)"
+   }
+  },
+  {
+   "@type": "Question",
+   "name": "What determines whether a candidate is compatible?",
+   "acceptedAnswer": {
+    "@type": "Answer",
+    "text": "Compatibility follows a fixed correspondence between the body-part categories annotated for the image and those represented by the candidate devices. For example, an upper-limb device is excluded when the image has only lower-limb target categories. Different device appearances can satisfy the same body-part relation. The visual task is to identify the relevant categories in the image and candidates, then apply that relation. Accepted categories and option sets are recorded and reviewed during annotation. This is structured visual matching, not a decision about which device should be prescribed to an individual. (Paper: Section 3.4, Appendices B.6 and D.4.)"
+   }
+  },
+  {
+   "@type": "Question",
+   "name": "How do Category and Diversity handle multiple matching answers?",
+   "acceptedAnswer": {
+    "@type": "Answer",
+    "text": "Category asks for one category. A prediction is correct when it belongs to the accepted category set, even when several categories are acceptable. Diversity asks for the complete matching option set, which can be empty. Its primary F1 describes set overlap, while Exact requires every target and no distractors. Partial records at least one target hit. These probes use separate grids and evaluate different output requirements. Diversity refers to variation in candidate appearance, not demographic diversity or a later step that receives the Category prediction. (Paper: Section 3.4, Figure 2, Appendix B.6.)"
+   }
+  },
+  {
+   "@type": "Question",
+   "name": "How are the reference annotations established and reviewed?",
+   "acceptedAnswer": {
+    "@type": "Answer",
+    "text": "Annotators use visual guidelines for residual-limb evidence, prosthetic-device appearance, and body regions. A second annotator reviews each mask and derived label set, including accepted categories and matching option sets. Disagreements above the annotation tolerance lead to re-annotation and adjudication. A certified classifier supports guidance and case adjudication, and periodic spot audits inspect randomly sampled batches. The reviewed masks, labels, and option sets form the reference targets used for model evaluation and human scoring. This makes the connection between the image annotation and the scored answer explicit. (Paper: Section 3.3, Figure 3, Appendix B.4.)"
+   }
+  },
+  {
+   "@type": "Question",
+   "name": "How should the human reference results be read across tasks?",
+   "acceptedAnswer": {
+    "@type": "Answer",
+    "text": "The human results describe performance under different response requirements. Raters reach 98.0% Presence accuracy and 83.4% Constrained Attribution mean set intersection over union (set mIoU). For Diversity, the overall F1 is 57.9%, while Exact is 12.0%. Exact gives no partial credit when a required option is omitted or a distractor is added. It therefore measures a different requirement from recovering much of the target set. The human reference provides task-specific comparisons against reviewed targets. The background-specific results below add context that the overall average alone does not show. (Paper: Tables 1, 2, and 4(a), Appendix C.3.)"
+   }
+  },
+  {
+   "@type": "Question",
+   "name": "Why report participant background rather than only an overall human average?",
+   "acceptedAnswer": {
+    "@type": "Answer",
+    "text": "The two participants with extensive disability-research experience achieve Diversity F1 scores of 77.78% and 70.67%. Their mean is 74.22%, compared with 47.03% for the participants with primarily computer-science backgrounds. The ratio is 1.58, with a 95% interval of [1.16, 2.22]. An analogy is bird identification, where people with different experience can perform differently under the same answer rules. A mean below the maximum does not by itself identify a problem with those rules. The ratio compares performance, not inter-rater agreement. The comparison is descriptive because assignments were not identical across participants. It is not a causal estimate of experience or a clinical performance ceiling. (Paper: Table 4(a), Appendix C.3.)"
+   }
+  },
+  {
+   "@type": "Question",
+   "name": "How should the reported metrics and confidence intervals be interpreted?",
+   "acceptedAnswer": {
+    "@type": "Answer",
+    "text": "Different metrics expose different errors. GPT-5 reaches 77.2% Presence accuracy but 50.0% macro-F1, while Gemini-2.5 reaches 47.0% and 35.3%, respectively. Accuracy weights examples equally, whereas macro-F1 weights the evaluated labels equally. For set outputs, Exact requires complete agreement, while set mIoU and F1 describe overlap. Sample-average and micro-F1 also use different aggregation rules. The tables report 95% confidence intervals where available, with the resampling units specified per evaluation in Appendix C.2. These distinctions help readers assess category imbalance, missed targets, and incorrect inclusions without treating one metric as a complete account of performance. (Paper: Tables 1 and 2, Appendix C.2.)"
+   }
+  },
+  {
+   "@type": "Question",
+   "name": "How do the analyses distinguish the demands contributing to model performance?",
+   "acceptedAnswer": {
+    "@type": "Answer",
+    "text": "The evidence comes from several complementary comparisons, not one model. The main tables compare six VLM families. The paired Attribution study holds images and targets fixed while changing the output format. Six within-family inference-style pairs and the matched MedGemma comparison examine checkpoint style and specialization. Figure 4 shows both correct and incorrect Presence answers across families, plus a Category example where every displayed prediction is incorrect. The component analysis provides a focused view of spatial assignment. These analyses support task-level conclusions about observable model outputs without attributing every error to one mechanism. They make the findings relevant to model evaluation while keeping the role of vocabulary, format, and familiarity explicit. (Paper: Tables 1, 2, 4(b), 5, and 6(c), Figure 4, Appendices C.4 through C.7 and D.2.)"
+   }
+  },
+  {
+   "@type": "Question",
+   "name": "Does a much larger model resolve the observed failures?",
+   "acceptedAnswer": {
+    "@type": "Answer",
+    "text": "Not uniformly. Moving from Qwen3-VL-30B-A3B-Instruct to 235B-A22B-Instruct raises Presence accuracy from 23.9% to 74.23%, but Constrained Attribution set mIoU changes only from 24.0% to 24.76%. Diversity F1 falls from 51.2% to 25.90%. A task-dependent pattern also appears within Gemma-3. Its reported Constrained Attribution set mIoU rises from 20.5% at 4B to 27.8% at 27B, while Category accuracy falls from 16.3% to 10.5%. Larger checkpoints can improve some requirements without improving others. These are comparisons of the evaluated checkpoints and settings, not a controlled estimate of parameter count alone or a general scaling law. (Paper: Section 4.1, Tables 1, 2, and 5(a), Appendix C.4.)"
+   }
+  },
+  {
+   "@type": "Question",
+   "name": "Why include Thinking and Reasoning checkpoints for visual tasks?",
+   "acceptedAnswer": {
+    "@type": "Answer",
+    "text": "They test whether the findings depend on the evaluated inference style. Across six same-family, same-scale pairs, no Thinking or Reasoning checkpoint improves all four primary probe scores. Qwen3-VL-4B-Thinking improves Diversity F1 by 17.4 percentage points while reducing Category accuracy by 11.8 points. For Ministral-3, Reasoning increases Diversity F1 by 6.9, 7.9, and 13.9 points at 3B, 8B, and 14B, respectively, but Exact decreases or remains unchanged at the reported precision. Including these results makes the trade-offs visible instead of assuming that reasoning either always helps or never helps. The comparisons concern existing checkpoints, not an isolated intervention on reasoning. (Paper: Table 5(b), Appendix C.4.)"
+   }
+  },
+  {
+   "@type": "Question",
+   "name": "Does medical-domain specialization improve these results?",
+   "acceptedAnswer": {
+    "@type": "Answer",
+    "text": "The matched MedGemma 1.5 4B comparison does not show improvements on the three reported Presence, Attribution, and Diversity primary scores. Relative to Gemma-3 4B, the differences are -7.87 points in Presence accuracy, -12.31 in Attribution set mIoU, and -4.56 in Diversity F1. The Category difference has magnitude 1.12 points, with a paired interval that includes zero. Medical-domain specialization is therefore not sufficient for better performance in this comparison. The conclusion concerns the evaluated model and open-world limb evidence, not all medical VLMs or clinical capabilities. (Paper: Table 5(c), Appendix C.4.)"
+   }
+  },
+  {
+   "@type": "Question",
+   "name": "Why does FreeForm use 500 paired items, and what does the comparison show?",
+   "acceptedAnswer": {
+    "@type": "Answer",
+    "text": "FreeForm is an output-format diagnostic for an attribution target already evaluated at full scale in Constrained form. We randomly sampled 500 image-target pairs and held both the image and target fixed within each paired comparison. On this subset, Qwen3-VL-4B-Thinking changes from 17.22% Constrained set mIoU to 43.1% FreeForm set mIoU. The corresponding 8B values are 15.87% and 44.7%, while GPT-5 changes from 26.51% to 30.5%. Output format clearly affects measured performance. The comparison is not an assessment of unrestricted description quality, and its Constrained scores should not be replaced with the full-pool scores. (Paper: Section 4.1, Table 4(b), Appendices B.5 and C.5.)"
+   }
+  },
+  {
+   "@type": "Question",
+   "name": "What does FreeForm parsing coverage establish?",
+   "acceptedAnswer": {
+    "@type": "Answer",
+    "text": "Parsing coverage measures whether a deterministic parser can recover a canonical label set, not whether that set is correct. In the paired diagnostic, coverage is 93.4% for Qwen3-VL-4B-Thinking, 90.4% for 8B-Thinking, and 83.4% for GPT-5. The remaining outputs are invalid under the parser. Attribution is then evaluated against the benchmark targets. Reporting coverage alongside set mIoU helps distinguish recoverable output structure from correct evidence assignment. The observed format differences include the effects of generation and deterministic normalization, rather than showing that the output interface is irrelevant. (Paper: Table 4(b), Appendix C.5.)"
+   }
+  },
+  {
+   "@type": "Question",
+   "name": "What does low exact-set accuracy reveal beyond task difficulty?",
+   "acceptedAnswer": {
+    "@type": "Answer",
+    "text": "Low Exact is not confined to one model family. Qwen3-VL-30B-A3B-Instruct reaches 80.4% Partial but 7.6% Exact. Gemma-3-27B reaches 56.0% and 0.9%, and Gemini-2.5 reaches 63.5% and 3.5%, respectively. Precision and recall reveal different error profiles. DeepSeek-VL2-Tiny combines 81.3% recall with 49.6% precision, while GPT-5 has 18.9% recall and 53.3% precision. High target coverage with incorrect inclusions and low target coverage are different failures, even when both produce low Exact. Table 7 further separates missed targets, extra options, and no-match errors in its detailed case analysis. This makes set prediction more informative than a single count of imperfect answers. (Paper: Section 4.2, Tables 2 and 7, Appendix C.7.)"
+   }
+  },
+  {
+   "@type": "Question",
+   "name": "How are simple image-independent response strategies used to interpret the scores?",
+   "acceptedAnswer": {
+    "@type": "Answer",
+    "text": "Appendix C.9 uses target counts to show what a response can achieve without inspecting the image. In the Presence pool analyzed there, always choosing the most frequent label yields 65.79% accuracy. In the corresponding 12,616-item Diversity pool, always returning an empty set yields 14.67% Exact, while selecting every option yields 85.33% Partial. These references show why a high Partial score or a nonzero Exact score alone need not demonstrate image-grounded matching. We therefore report overlap, selection size, and empty-target outcomes alongside Exact and Partial. The references are analytical calculations, not additional model runs, and comparisons require the same evaluation pool. (Paper: Appendix C.9, Tables 6(b) and 7.)"
+   }
+  },
+  {
+   "@type": "Question",
+   "name": "What does paraphrase consistency add beyond correctness?",
+   "acceptedAnswer": {
+    "@type": "Answer",
+    "text": "Correctness checks agreement with the target, while consistency checks variation across equivalent wording. The main tables show why they are not interchangeable. Gemma-3-12B has 85.2% gated Presence consistency but 29.9% accuracy. DeepSeek-VL2-Tiny has 87.0% gated Diversity consistency but 10.2% Exact. Gated consistency applies only to groups with at least one correct response, so these values do not describe overall correctness. The separate raw-consistency analysis supplies direct evidence of repeated errors: Qwen3-VL-235B gives the same incorrect Attribution answer throughout 47.28% of paraphrase groups. We therefore interpret correctness, raw consistency, gated consistency, and retained coverage separately. A stable answer can be wrong, and high consistency on a retained subset is not a measure of success across all examples. (Paper: Tables 1, 2, and 6(e), Section 4.3, Appendix C.8.)"
+   }
+  },
+  {
+   "@type": "Question",
+   "name": "How are no-match answers, insufficient information, and invalid outputs distinguished?",
+   "acceptedAnswer": {
+    "@type": "Answer",
+    "text": "A no-match target means none of the presented candidates satisfies the benchmark relation. An insufficient-information choice, where provided, is an explicit answer indicating inadequate visible evidence. An invalid output is one from which the parser cannot recover a valid canonical response. These outcomes have different meanings. Correctly returning an empty set does not by itself establish uncertainty-based abstention, and a parsing failure is not a successful decision to withhold an answer. Keeping the cases separate makes the selection errors and the scope of the reported behavior easier to interpret. (Paper: Appendix B.6, Appendix C.7.)"
+   }
+  },
+  {
+   "@type": "Question",
+   "name": "How can a test-only benchmark guide future model development?",
+   "acceptedAnswer": {
+    "@type": "Answer",
+    "text": "The experiments identify several concrete development targets. Low Attribution scores across model families motivate better evidence-to-region assignment. Diversity precision and recall distinguish missed targets from incorrect inclusions, while the paired FreeForm results show why improvements should be checked across output formats. The 235B oracle analysis adds a focused diagnostic: correcting body region or side separately raises set mIoU by 16.32 or 21.41 percentage points. These are target-assisted gains, not results from a trained remedy. The exact pretraining corpora are unavailable, so the study does not estimate population-specific training prevalence. Future methods should use separate development data and test whether they address these observed errors on the fixed benchmark, rather than improve only coarse accuracy or response consistency. (Paper: Tables 1, 2, 4(b), and 6(c), Appendices B.7, C.6, D.2, and D.4.)"
+   }
+  },
+  {
+   "@type": "Question",
+   "name": "How will reproduction remain traceable when images, models, or device pools change?",
+   "acceptedAnswer": {
+    "@type": "Answer",
+    "text": "The release plan pairs benchmark annotations and task records with stable image identifiers, checksums, exact option grids, scoring code, and reconstruction instructions. Source-image access follows the permitted LDPose access route rather than relying only on changing web links. Recorded model identifiers and API snapshot dates will accompany closed-model results. Candidate-pool updates will use new versions and change logs, preserving the relationship between prior scores and their original targets. These plans distinguish reproducing target-based scoring from rerunning a provider service that may change. We will document the non-owner download and scoring check alongside the release. (Paper: Appendix C.1, Appendices E.2 and E.3.)"
+   }
+  },
+  {
+   "@type": "Question",
+   "name": "What ethical safeguards govern the benchmark?",
+   "acceptedAnswer": {
+    "@type": "Answer",
+    "text": "The project received approval from an institutional Human Research Ethics Committee. Institution names and approval identifiers are omitted during anonymous review. Benchmark annotations, prompts, and derived metadata are designated for CC BY-NC-SA 4.0 release, while source photographs retain their own rights and access conditions. The access agreement restricts use to non-commercial research, requires secure storage, and prohibits re-identification and face recognition. Correction and removal procedures support affected individuals and rights holders. The resource evaluates model interpretation of visible evidence, not the abilities, identities, or lived experiences of the people depicted. (Paper: Ethics statement, Appendices E.1 and E.2, Datasheet.)"
+   }
+  },
+  {
+   "@type": "Question",
+   "name": "Why include a Q&A section on the project page?",
+   "acceptedAnswer": {
+    "@type": "Answer",
+    "text": "At some point, we noticed we were answering imaginary reviewers in the middle of the Introduction. That was not our best writing habit. So the paper now follows the research story, and this page takes the follow-up questions. You can open the ones you care about and skip the rest. And yes, we hope these answers help earn your support for the paper. We care about making individuals with limb deficiencies part of VLM evaluation, and we hope the benchmark and evidence make a convincing case. Thanks for reading this far."
+   }
+  }
+ ]
+}
+  </script>
   <style>
     :root {
       --ink: #17201c;
       --muted: #53635d;
+      --faint: #7a8a84;
       --line: #d8dfdb;
       --paper: #fbfcfb;
+      --tint: #f4f8f6;
       --panel: #ffffff;
       --green: #176b5f;
       --amber: #a86513;
@@ -21,939 +242,1150 @@
       --soft-red: #f5e8ea;
       --soft-blue: #e8eef6;
       --shadow: 0 14px 34px rgba(20, 35, 30, 0.09);
+      --mono: ui-monospace, SFMono-Regular, Menlo, Consolas, monospace;
     }
 
-    * {
-      box-sizing: border-box;
-    }
-
-    html {
-      scroll-behavior: smooth;
-    }
+    * { box-sizing: border-box; }
+    html { scroll-behavior: smooth; scroll-padding-top: 76px; }
 
     body {
       margin: 0;
       background: var(--paper);
       color: var(--ink);
       font-family: Inter, ui-sans-serif, system-ui, -apple-system, BlinkMacSystemFont, "Segoe UI", sans-serif;
-      line-height: 1.58;
+      line-height: 1.6;
+      -webkit-font-smoothing: antialiased;
     }
 
-    a {
-      color: inherit;
-    }
+    a { color: var(--green); }
+    code { font-family: var(--mono); font-size: 0.9em; background: var(--soft-green); padding: 1px 5px; border-radius: 4px; color: var(--ink); }
 
-    .shell {
-      width: min(1120px, calc(100% - 32px));
-      margin: 0 auto;
-    }
+    .shell { width: min(1120px, calc(100% - 32px)); margin: 0 auto; }
 
+    /* ---------- top bar ---------- */
     .topbar {
-      position: sticky;
-      top: 0;
-      z-index: 10;
+      position: sticky; top: 0; z-index: 20;
       border-bottom: 1px solid var(--line);
       background: rgba(251, 252, 251, 0.94);
       backdrop-filter: blur(14px);
     }
+    .nav { min-height: 60px; display: flex; align-items: center; justify-content: space-between; gap: 18px; }
+    .brand { font-weight: 760; white-space: nowrap; text-decoration: none; color: var(--ink); }
+    .navlinks { display: flex; align-items: center; justify-content: flex-end; flex-wrap: wrap; gap: 2px; }
+    .navlinks a { padding: 7px 10px; border-radius: 6px; color: var(--muted); text-decoration: none; font-size: 14px; font-weight: 620; }
+    .navlinks a:hover { background: var(--soft-green); color: var(--ink); }
+    .navlinks a.qa-link { color: var(--green); background: var(--soft-green); border: 1px solid #c9e3db; }
 
-    .nav {
-      min-height: 64px;
-      display: flex;
-      align-items: center;
-      justify-content: space-between;
-      gap: 18px;
-    }
-
-    .brand {
-      font-weight: 760;
-      letter-spacing: 0;
-      white-space: nowrap;
-    }
-
-    .navlinks {
-      display: flex;
-      align-items: center;
-      justify-content: flex-end;
-      flex-wrap: wrap;
-      gap: 6px;
-    }
-
-    .navlinks a {
-      padding: 8px 10px;
-      border-radius: 6px;
-      color: var(--muted);
-      text-decoration: none;
-      font-size: 14px;
-      font-weight: 620;
-    }
-
-    .navlinks a:hover {
-      background: var(--soft-green);
-      color: var(--ink);
-    }
-
-    .hero {
-      padding: 58px 0 34px;
-      border-bottom: 1px solid var(--line);
-      background: #f6f9f7;
-    }
-
+    /* ---------- hero ---------- */
+    .hero { padding: 54px 0 38px; border-bottom: 1px solid var(--line); background: var(--tint); }
     .label {
-      display: inline-flex;
-      align-items: center;
-      color: var(--green);
-      background: var(--soft-green);
-      border: 1px solid #c9e3db;
-      padding: 7px 10px;
-      border-radius: 6px;
-      font-size: 13px;
-      font-weight: 740;
-      margin-bottom: 20px;
+      display: inline-flex; align-items: center; gap: 8px;
+      color: var(--green); background: var(--soft-green); border: 1px solid #c9e3db;
+      padding: 6px 10px; border-radius: 6px; font-size: 13px; font-weight: 740; margin-bottom: 20px;
     }
-
-    h1 {
-      font-size: 48px;
-      line-height: 1.05;
-      margin: 0 0 10px;
-      max-width: 980px;
-      letter-spacing: 0;
-    }
-
-    .title-subtitle {
-      margin: 0 0 22px;
-      max-width: 980px;
-      color: var(--muted);
-      font-size: 28px;
-      line-height: 1.18;
-      font-weight: 720;
-      letter-spacing: 0;
-    }
-
-    .subtitle {
-      font-size: 18px;
-      color: var(--muted);
-      max-width: 880px;
-      margin: 0 0 24px;
-    }
-
-    .actions {
-      display: flex;
-      flex-wrap: wrap;
-      gap: 10px;
-      margin-bottom: 26px;
-    }
-
+    h1 { font-size: 46px; line-height: 1.06; margin: 0 0 12px; max-width: 1000px; letter-spacing: -0.01em; }
+    .title-subtitle { margin: 0 0 20px; max-width: 900px; color: var(--muted); font-size: 26px; line-height: 1.22; font-weight: 700; }
+    .subtitle { font-size: 18px; color: var(--muted); max-width: 860px; margin: 0 0 24px; }
+    .actions { display: flex; flex-wrap: wrap; gap: 10px; margin-bottom: 30px; }
     .button {
-      display: inline-flex;
-      align-items: center;
-      justify-content: center;
-      min-height: 42px;
-      padding: 10px 14px;
-      border-radius: 6px;
-      border: 1px solid var(--line);
-      background: var(--panel);
-      color: var(--ink);
-      text-decoration: none;
-      font-weight: 720;
+      display: inline-flex; align-items: center; gap: 8px; min-height: 42px; padding: 10px 15px;
+      border-radius: 6px; border: 1px solid var(--line); background: var(--panel); color: var(--ink);
+      text-decoration: none; font-weight: 700; font-size: 15px;
     }
+    .button.primary { background: var(--green); color: white; border-color: var(--green); }
+    .button:hover { transform: translateY(-1px); box-shadow: var(--shadow); }
+    .button svg { width: 17px; height: 17px; stroke: currentColor; stroke-width: 2; fill: none; stroke-linecap: round; stroke-linejoin: round; }
 
-    .button.primary {
-      background: var(--green);
-      color: white;
-      border-color: var(--green);
-    }
+    .stats { display: grid; grid-template-columns: repeat(5, minmax(0, 1fr)); gap: 0; margin: 0 0 30px; border: 1px solid var(--line); border-radius: 8px; background: var(--panel); overflow: hidden; }
+    .stat { padding: 16px 18px; border-left: 1px solid var(--line); }
+    .stat:first-child { border-left: 0; }
+    .stat b { display: block; font-size: 26px; line-height: 1.1; font-weight: 800; font-variant-numeric: tabular-nums; }
+    .stat span { display: block; margin-top: 4px; color: var(--muted); font-size: 13px; line-height: 1.35; }
 
-    .button:hover {
-      transform: translateY(-1px);
-      box-shadow: var(--shadow);
-    }
-
-    .signal-grid {
-      display: grid;
-      grid-template-columns: repeat(4, minmax(0, 1fr));
-      gap: 12px;
-      margin: 0 0 26px;
-    }
-
-    .signal {
-      display: grid;
-      grid-template-columns: 38px minmax(0, 1fr);
-      gap: 12px;
-      align-items: start;
-      min-height: 122px;
-      padding: 14px;
-      border: 1px solid var(--line);
-      border-radius: 8px;
-      background: rgba(255, 255, 255, 0.84);
-    }
-
-    .signal-icon {
-      width: 38px;
-      height: 38px;
-      display: inline-flex;
-      align-items: center;
-      justify-content: center;
-      border-radius: 8px;
-      color: var(--green);
-      background: var(--soft-green);
-      border: 1px solid #c9e3db;
-    }
-
-    .signal:nth-child(2) .signal-icon {
-      color: var(--blue);
-      background: var(--soft-blue);
-      border-color: #ccd9e8;
-    }
-
-    .signal:nth-child(3) .signal-icon {
-      color: var(--amber);
-      background: var(--soft-amber);
-      border-color: #ead8bf;
-    }
-
-    .signal:nth-child(4) .signal-icon {
-      color: var(--red);
-      background: var(--soft-red);
-      border-color: #e4cfd2;
-    }
-
-    .signal-icon svg {
-      width: 21px;
-      height: 21px;
-      stroke: currentColor;
-      stroke-width: 2;
-      stroke-linecap: round;
-      stroke-linejoin: round;
-      fill: none;
-    }
-
-    .signal strong {
-      display: block;
-      margin-bottom: 4px;
-      font-size: 14px;
-      line-height: 1.2;
-    }
-
-    .signal span {
-      display: block;
-      color: var(--muted);
-      font-size: 13px;
-      line-height: 1.45;
-    }
-
-    .paper-figure {
-      margin: 0;
-    }
-
+    .paper-figure { margin: 0; }
     .paper-figure img {
-      display: block;
-      width: 100%;
-      height: auto;
-      border: 1px solid var(--line);
-      border-radius: 8px;
-      background: white;
-      box-shadow: var(--shadow);
+      display: block; width: 100%; height: auto;
+      border: 1px solid var(--line); border-radius: 8px; background: white; box-shadow: var(--shadow);
     }
+    .paper-figure figcaption { margin-top: 12px; color: var(--muted); font-size: 14px; max-width: 980px; }
+    .paper-figure figcaption b { color: var(--ink); }
+    .zoom { cursor: zoom-in; display: block; }
 
-    .paper-figure figcaption {
-      margin-top: 10px;
-      color: var(--muted);
-      font-size: 14px;
-    }
+    /* ---------- sections ---------- */
+    main section { padding: 56px 0; border-bottom: 1px solid var(--line); }
+    main section.alt { background: var(--tint); }
+    .section-head { display: grid; grid-template-columns: minmax(0, 0.62fr) minmax(280px, 0.38fr); gap: 28px; align-items: end; margin-bottom: 26px; }
+    .eyebrow { display: block; color: var(--green); font-size: 13px; font-weight: 760; text-transform: uppercase; letter-spacing: 0.06em; margin-bottom: 6px; }
+    h2 { margin: 0; font-size: 30px; line-height: 1.15; }
+    h3 { letter-spacing: 0; }
+    .section-note { margin: 0; color: var(--muted); font-size: 15px; }
+    .prose { max-width: 860px; color: var(--ink); font-size: 16.5px; }
+    .prose p { margin: 0 0 14px; }
 
-    main section {
-      padding: 54px 0;
-      border-bottom: 1px solid var(--line);
-    }
+    .card { padding: 20px; border: 1px solid var(--line); border-radius: 8px; background: var(--panel); }
+    .card h3 { margin: 0 0 8px; font-size: 18px; }
+    .card p { margin: 0; color: var(--muted); font-size: 15px; }
+    .stripe-green { border-top: 4px solid var(--green); }
+    .stripe-amber { border-top: 4px solid var(--amber); }
+    .stripe-red { border-top: 4px solid var(--red); }
+    .stripe-blue { border-top: 4px solid var(--blue); }
 
-    .section-head {
-      display: grid;
-      grid-template-columns: minmax(0, 0.72fr) minmax(280px, 0.28fr);
-      gap: 28px;
-      align-items: end;
-      margin-bottom: 24px;
-    }
+    /* task cards */
+    .tasks { display: grid; grid-template-columns: repeat(3, minmax(0, 1fr)); gap: 14px; margin-bottom: 30px; }
+    .task .step { display: inline-flex; width: 28px; height: 28px; align-items: center; justify-content: center; border-radius: 50%; font-weight: 800; font-size: 14px; margin-bottom: 10px; }
+    .task.t1 .step { background: var(--soft-blue); color: var(--blue); }
+    .task.t2 .step { background: var(--soft-green); color: var(--green); }
+    .task.t3 .step { background: var(--soft-amber); color: var(--amber); }
+    .task .q { color: var(--ink); font-weight: 650; font-size: 15px; margin: 0 0 8px; }
+    .task ul { margin: 12px 0 0; padding: 0; list-style: none; border-top: 1px solid var(--line); }
+    .task li { padding: 9px 0 0; font-size: 14px; color: var(--muted); }
+    .task li b { color: var(--ink); }
+    .task .metric { display: inline-block; margin-top: 12px; font-size: 12px; font-weight: 740; padding: 4px 8px; border-radius: 6px; background: var(--tint); color: var(--muted); border: 1px solid var(--line); }
+    .callout { padding: 16px 18px; border: 1px solid var(--line); border-left: 5px solid var(--green); border-radius: 8px; background: var(--panel); color: var(--muted); font-size: 15px; margin-top: 22px; }
+    .callout b { color: var(--ink); }
 
-    h2 {
-      margin: 0;
-      font-size: 30px;
-      line-height: 1.15;
-      letter-spacing: 0;
-    }
+    /* data */
+    .split { display: grid; grid-template-columns: minmax(0, 0.44fr) minmax(0, 0.56fr); gap: 28px; align-items: start; }
+    .counts { width: 100%; border-collapse: collapse; font-size: 14.5px; background: var(--panel); border: 1px solid var(--line); border-radius: 8px; overflow: hidden; }
+    .counts th, .counts td { padding: 10px 12px; border-bottom: 1px solid var(--line); text-align: left; vertical-align: top; }
+    .counts thead th { background: var(--tint); font-size: 12.5px; text-transform: uppercase; letter-spacing: 0.04em; color: var(--muted); }
+    .counts td.n { text-align: right; font-variant-numeric: tabular-nums; white-space: nowrap; font-weight: 650; }
+    .counts tr:last-child td, .counts tr:last-child th { border-bottom: 0; }
+    .counts small { display: block; color: var(--faint); font-size: 12.5px; }
+    .bullets { margin: 0; padding-left: 20px; color: var(--muted); }
+    .bullets li { margin-bottom: 8px; }
+    .bullets b { color: var(--ink); }
 
-    .section-note {
-      margin: 0;
-      color: var(--muted);
-      font-size: 15px;
-    }
+    /* results */
+    .result-grid { display: grid; grid-template-columns: repeat(4, 1fr); gap: 14px; margin-bottom: 18px; }
+    .metric-card { display: flex; flex-direction: column; gap: 10px; }
+    .metric-label { color: var(--muted); font-size: 12.5px; font-weight: 760; text-transform: uppercase; letter-spacing: 0.04em; }
+    .vs { display: grid; grid-template-columns: 1fr 1fr; gap: 8px; }
+    .vs div { padding: 8px 10px; border-radius: 6px; background: var(--tint); }
+    .vs div.h { background: var(--soft-green); }
+    .vs b { display: block; font-size: 24px; line-height: 1.1; font-weight: 820; font-variant-numeric: tabular-nums; }
+    .vs span { font-size: 12px; color: var(--muted); }
+    .metric-detail { color: var(--muted); font-size: 14px; line-height: 1.5; margin: 0; }
 
-    .grid-3 {
-      display: grid;
-      grid-template-columns: repeat(3, 1fr);
-      gap: 14px;
-    }
+    .tabs { display: flex; gap: 6px; margin: 30px 0 12px; flex-wrap: wrap; }
+    .tab { font: inherit; font-size: 14px; font-weight: 700; padding: 8px 14px; border-radius: 6px; border: 1px solid var(--line); background: var(--panel); color: var(--muted); cursor: pointer; }
+    .tab[aria-selected="true"] { background: var(--ink); color: white; border-color: var(--ink); }
+    .table-wrap { overflow-x: auto; border: 1px solid var(--line); border-radius: 8px; background: var(--panel); }
+    table.results { border-collapse: collapse; width: 100%; font-size: 13.5px; font-variant-numeric: tabular-nums; min-width: 860px; }
+    table.results caption { caption-side: bottom; text-align: left; padding: 12px 14px; color: var(--muted); font-size: 13px; border-top: 1px solid var(--line); }
+    table.results th, table.results td { padding: 7px 10px; border-bottom: 1px solid #edf1ef; text-align: right; white-space: nowrap; }
+    table.results thead th { background: var(--tint); font-size: 12px; color: var(--muted); font-weight: 700; text-align: center; border-bottom: 1px solid var(--line); }
+    table.results thead th.grp { color: var(--ink); font-size: 12.5px; }
+    table.results thead th.primary { color: var(--ink); }
+    table.results th.fam { text-align: left; vertical-align: top; font-weight: 700; color: var(--ink); background: #fcfdfc; border-right: 1px solid #edf1ef; }
+    table.results th.model { text-align: left; font-weight: 450; color: var(--ink); }
+    table.results tr.fam-start > * { border-top: 1px solid var(--line); }
+    table.results td.primary { background: #f7faf9; }
+    table.results td.best { font-weight: 800; color: var(--green); }
+    table.results td.na { color: var(--faint); text-align: center; }
+    table.results .ci { color: var(--faint); font-size: 11px; margin-left: 2px; font-weight: 400; }
+    table.results tr.human > * { background: var(--soft-green); }
+    table.results tbody tr:hover > td, table.results tbody tr:hover > th.model { background: #eef5f2; }
+    .table-note { color: var(--muted); font-size: 13px; margin: 10px 2px 0; }
 
-    .grid-2 {
-      display: grid;
-      grid-template-columns: repeat(2, 1fr);
-      gap: 18px;
-    }
+    /* findings */
+    .findings { display: grid; gap: 16px; }
+    .finding > * { min-width: 0; }
+    .finding { display: grid; grid-template-columns: minmax(0, 0.5fr) minmax(0, 0.5fr); gap: 24px; padding: 22px; border: 1px solid var(--line); border-radius: 8px; background: var(--panel); }
+    .finding h3 { margin: 0 0 8px; font-size: 20px; }
+    .finding .tag { display: inline-block; font-size: 12px; font-weight: 760; padding: 3px 8px; border-radius: 6px; margin-bottom: 10px; }
+    .finding p { margin: 0 0 10px; color: var(--muted); font-size: 15px; }
+    .finding p:last-child { margin-bottom: 0; }
+    .bars { display: grid; gap: 10px; align-content: center; }
+    .bar-row { display: grid; grid-template-columns: 140px 1fr 58px; gap: 10px; align-items: center; font-size: 14px; }
+    .bar-row .name { color: var(--ink); font-weight: 600; }
+    .bar-track { height: 14px; border-radius: 4px; background: #edf1ef; overflow: hidden; }
+    .bar-fill { height: 100%; border-radius: 4px; }
+    .bar-row .v { text-align: right; font-weight: 750; font-variant-numeric: tabular-nums; }
+    .bars-title { font-size: 12.5px; color: var(--muted); font-weight: 700; text-transform: uppercase; letter-spacing: 0.04em; margin-bottom: 2px; }
+    .mini { width: 100%; border-collapse: collapse; font-size: 14px; font-variant-numeric: tabular-nums; }
+    .mini th, .mini td { padding: 8px 8px; border-bottom: 1px solid var(--line); text-align: right; }
+    .mini th:first-child, .mini td:first-child { text-align: left; }
+    .mini thead th { font-size: 12px; color: var(--muted); text-transform: uppercase; letter-spacing: 0.03em; }
+    .mini td.up { color: var(--green); font-weight: 750; }
+    .mini td.down { color: var(--red); font-weight: 750; }
+    .mini td.flat { color: var(--muted); font-weight: 750; }
 
-    .card {
-      min-height: 168px;
-      padding: 18px;
-      border: 1px solid var(--line);
-      border-radius: 8px;
-      background: var(--panel);
-    }
+    /* ---------- Q&A ---------- */
+    #qa { background: linear-gradient(180deg, var(--soft-green) 0, var(--paper) 220px); }
+    .qa-toolbar { display: flex; flex-wrap: wrap; gap: 10px; align-items: center; justify-content: space-between; margin-bottom: 22px; padding: 12px 14px; border: 1px solid var(--line); border-radius: 8px; background: var(--panel); }
+    .qa-toolbar .left { display: flex; gap: 8px; flex-wrap: wrap; }
+    .qa-toolbar button { font: inherit; font-size: 14px; font-weight: 700; padding: 7px 12px; border-radius: 6px; border: 1px solid var(--line); background: var(--panel); color: var(--ink); cursor: pointer; }
+    .qa-toolbar button:hover { background: var(--soft-green); }
+    .qa-toolbar input { font: inherit; font-size: 14px; padding: 7px 12px; border-radius: 6px; border: 1px solid var(--line); min-width: 240px; flex: 0 1 320px; }
+    .qa-toolbar input:focus { outline: 2px solid #9ccbbd; border-color: var(--green); }
+    .qa-toolbar .plain { font-size: 13.5px; color: var(--muted); }
+    .qa-layout { display: grid; grid-template-columns: 230px minmax(0, 1fr); gap: 30px; align-items: start; }
+    .qa-index { position: sticky; top: 80px; font-size: 14px; }
+    .qa-index b { display: block; font-size: 12px; color: var(--muted); text-transform: uppercase; letter-spacing: 0.05em; margin-bottom: 8px; }
+    .qa-index a { display: block; padding: 6px 10px; border-left: 2px solid var(--line); color: var(--muted); text-decoration: none; }
+    .qa-index a:hover { color: var(--ink); border-left-color: var(--green); }
+    .qa-group { margin-bottom: 28px; }
+    .qa-group:last-child { margin-bottom: 0; }
+    .qa-group-title { display: flex; align-items: center; gap: 10px; margin: 0 0 10px; font-size: 18px; }
+    .qa-group-count { display: inline-flex; min-width: 26px; height: 22px; padding: 0 7px; align-items: center; justify-content: center; border-radius: 11px; background: var(--ink); color: white; font-size: 12px; font-weight: 750; }
+    details.qa { border: 1px solid var(--line); border-radius: 8px; background: var(--panel); margin-bottom: 8px; transition: box-shadow .15s; }
+    details.qa[open] { box-shadow: 0 6px 20px rgba(20, 35, 30, 0.07); border-color: #bcd7ce; }
+    details.qa summary { list-style: none; cursor: pointer; display: grid; grid-template-columns: 44px minmax(0, 1fr) 20px; gap: 10px; align-items: start; padding: 14px 16px; font-weight: 650; font-size: 15.5px; line-height: 1.45; }
+    details.qa summary::-webkit-details-marker { display: none; }
+    details.qa summary:hover .qa-q { color: var(--green); }
+    .qa-num { font-family: var(--mono); font-size: 12.5px; font-weight: 700; color: var(--green); background: var(--soft-green); border-radius: 5px; text-align: center; padding: 2px 0; margin-top: 1px; }
+    .qa-chev { width: 10px; height: 10px; margin-top: 6px; border-right: 2px solid var(--faint); border-bottom: 2px solid var(--faint); transform: rotate(45deg); transition: transform .15s; justify-self: center; }
+    details.qa[open] .qa-chev { transform: rotate(225deg); margin-top: 10px; }
+    .qa-a { padding: 0 18px 16px 70px; color: #34423d; font-size: 15.5px; }
+    .qa-a p { margin: 0 0 10px; }
+    .qa-ref { display: flex; flex-wrap: wrap; gap: 8px; align-items: baseline; margin-top: 12px !important; font-size: 13.5px; color: var(--muted); }
+    .qa-ref span { font-size: 11px; font-weight: 760; text-transform: uppercase; letter-spacing: 0.05em; color: var(--blue); background: var(--soft-blue); padding: 2px 7px; border-radius: 4px; }
+    .qa-ref em { font-style: normal; }
+    details.qa.hidden, .qa-group.hidden { display: none; }
+    .qa-empty { display: none; color: var(--muted); padding: 12px 0; }
+    mark { background: #fbe7b5; color: inherit; border-radius: 2px; }
 
-    .card h3 {
-      margin: 0 0 10px;
-      font-size: 18px;
-      letter-spacing: 0;
-    }
+    /* code / scope */
+    .code-grid { display: grid; grid-template-columns: repeat(4, 1fr); gap: 14px; }
+    .code-link { display: block; padding: 18px; border: 1px solid var(--line); border-radius: 8px; background: var(--panel); text-decoration: none; color: var(--ink); }
+    .code-link strong { display: block; margin-bottom: 8px; font-size: 16px; }
+    .code-link span { display: block; color: var(--muted); font-size: 13.5px; font-family: var(--mono); overflow-wrap: anywhere; }
+    .code-link:hover { border-color: #adcfc5; box-shadow: var(--shadow); transform: translateY(-1px); }
+    .grid-3 { display: grid; grid-template-columns: repeat(3, 1fr); gap: 14px; }
 
-    .card p {
-      margin: 0;
-      color: var(--muted);
-      font-size: 15px;
-    }
+    pre { margin: 0; white-space: pre-wrap; overflow-wrap: anywhere; background: #101714; color: #e9f1ed; border-radius: 8px; padding: 18px; font-size: 13px; line-height: 1.5; font-family: var(--mono); }
+    footer { padding: 30px 0 44px; color: var(--muted); font-size: 14px; }
 
-    .stripe-green {
-      border-top: 4px solid var(--green);
-    }
-
-    .stripe-amber {
-      border-top: 4px solid var(--amber);
-    }
-
-    .stripe-red {
-      border-top: 4px solid var(--red);
-    }
-
-    .stripe-blue {
-      border-top: 4px solid var(--blue);
-    }
-
-    .construct {
-      display: grid;
-      grid-template-columns: minmax(0, 1fr) minmax(0, 1fr);
-      gap: 14px;
-      align-items: stretch;
-    }
-
-    .construct .card {
-      min-height: 0;
-    }
-
-    .readout {
-      display: grid;
-      grid-template-columns: 190px 1fr;
-      gap: 14px;
-      padding: 16px 0;
-      border-top: 1px solid var(--line);
-    }
-
-    .readout:first-child {
-      border-top: 0;
-      padding-top: 0;
-    }
-
-    .readout strong {
-      display: block;
-      font-size: 16px;
-    }
-
-    .readout p {
-      margin: 0;
-      color: var(--muted);
-    }
-
-    .pill {
-      display: inline-flex;
-      align-items: center;
-      padding: 5px 8px;
-      border-radius: 6px;
-      font-size: 12px;
-      font-weight: 760;
-      margin-top: 6px;
-    }
-
-    .pill.green {
-      color: var(--green);
-      background: var(--soft-green);
-    }
-
-    .pill.amber {
-      color: var(--amber);
-      background: var(--soft-amber);
-    }
-
-    .pill.blue {
-      color: var(--blue);
-      background: var(--soft-blue);
-    }
-
-    .figure-stack {
-      display: grid;
-      gap: 32px;
-    }
-
-    .figure-panel-grid {
-      display: grid;
-      gap: 22px;
-    }
-
-    .figure-panel-grid.three {
-      grid-template-columns: 1fr;
-    }
-
-    .figure-panel-grid.two {
-      grid-template-columns: 1fr;
-    }
-
-    .figure-group {
-      display: grid;
-      gap: 14px;
-    }
-
-    .figure-group h3 {
-      margin: 0;
-      font-size: 22px;
-      line-height: 1.2;
-      letter-spacing: 0;
-    }
-
-    .figure-group .group-note {
-      margin: 0;
-      max-width: 820px;
-      color: var(--muted);
-    }
-
-    .panel-figure.narrow {
-      width: min(760px, 100%);
-      margin-left: auto;
-      margin-right: auto;
-    }
-
-    .panel-figure.medium {
-      width: min(940px, 100%);
-      margin-left: auto;
-      margin-right: auto;
-    }
-
-    .panel-figure {
-      margin: 0;
-      background: var(--panel);
-      border: 1px solid var(--line);
-      border-radius: 8px;
-      overflow: hidden;
-    }
-
-    .crop-window {
-      --image-w: 2200;
-      --image-h: 1379;
-      --crop-x: 0;
-      --crop-y: 0;
-      --crop-w: 2200;
-      --crop-h: 1379;
-      position: relative;
-      overflow: hidden;
-      aspect-ratio: var(--crop-w) / var(--crop-h);
-      background: white;
-    }
-
-    .crop-window img {
-      position: absolute;
-      top: 0;
-      left: 0;
-      width: calc(100% * var(--image-w) / var(--crop-w));
-      max-width: none;
-      height: auto;
-      border: 0;
-      border-radius: 0;
-      box-shadow: none;
-      transform: translate(
-        calc(-100% * var(--crop-x) / var(--image-w)),
-        calc(-100% * var(--crop-y) / var(--image-h))
-      );
-      transform-origin: top left;
-    }
-
-    .panel-figure figcaption {
-      padding: 12px 14px 14px;
-      color: var(--muted);
-      font-size: 14px;
-    }
-
-    .panel-figure figcaption strong {
-      display: block;
-      margin-bottom: 4px;
-      color: var(--ink);
-      font-size: 14px;
-    }
-
-    .result-grid {
-      display: grid;
-      grid-template-columns: repeat(4, 1fr);
-      gap: 14px;
-    }
-
-    .metric-card {
-      min-height: 210px;
-      display: flex;
-      flex-direction: column;
-      gap: 12px;
-    }
-
-    .metric-label {
-      color: var(--muted);
-      font-size: 13px;
-      font-weight: 760;
-      text-transform: uppercase;
-    }
-
-    .metric-value {
-      color: var(--ink);
-      font-size: 30px;
-      font-weight: 820;
-      line-height: 1.05;
-      letter-spacing: 0;
-    }
-
-    .metric-detail {
-      color: var(--muted);
-      font-size: 14px;
-      line-height: 1.55;
-    }
-
-    .result-note {
-      max-width: 880px;
-      margin: 16px 0 0;
-      color: var(--muted);
-      font-size: 14px;
-    }
-
-    .code-grid {
-      display: grid;
-      grid-template-columns: repeat(4, 1fr);
-      gap: 14px;
-    }
-
-    .code-link {
-      display: block;
-      min-height: 150px;
-      padding: 18px;
-      border: 1px solid var(--line);
-      border-radius: 8px;
-      background: var(--panel);
-      text-decoration: none;
-    }
-
-    .code-link strong {
-      display: block;
-      margin-bottom: 10px;
-      font-size: 16px;
-    }
-
-    .code-link span {
-      display: block;
-      color: var(--muted);
-      font-size: 14px;
-      overflow-wrap: anywhere;
-    }
-
-    .code-link:hover {
-      border-color: #adcfc5;
-      box-shadow: var(--shadow);
-      transform: translateY(-1px);
-    }
-
-    .split {
-      display: grid;
-      grid-template-columns: minmax(0, 0.58fr) minmax(320px, 0.42fr);
-      gap: 24px;
-      align-items: start;
-    }
-
-    .split p {
-      color: var(--muted);
-    }
-
-    .callout {
-      padding: 18px;
-      border: 1px solid var(--line);
-      border-left: 5px solid var(--green);
-      border-radius: 8px;
-      background: var(--panel);
-    }
-
-    .callout p {
-      margin: 0;
-      color: var(--muted);
-    }
-
-    pre {
-      margin: 0;
-      white-space: pre-wrap;
-      overflow-wrap: anywhere;
-      background: #101714;
-      color: #e9f1ed;
-      border-radius: 8px;
-      padding: 18px;
-      font-size: 13px;
-      line-height: 1.5;
-    }
-
-    footer {
-      padding: 30px 0 44px;
-      color: var(--muted);
-      font-size: 14px;
-    }
+    /* lightbox */
+    .lightbox { position: fixed; inset: 0; background: rgba(10, 16, 14, 0.9); display: none; align-items: center; justify-content: center; z-index: 50; padding: 20px; cursor: zoom-out; }
+    .lightbox.open { display: flex; }
+    .lightbox img { max-width: 100%; max-height: 100%; border-radius: 6px; background: white; }
 
     @media (max-width: 920px) {
-      .section-head,
-      .construct,
-      .grid-2,
-      .split,
-      .signal-grid,
-      .figure-panel-grid.three,
-      .figure-panel-grid.two {
-        grid-template-columns: 1fr;
-      }
-
-      .grid-3,
-      .result-grid,
-      .code-grid {
-        grid-template-columns: 1fr;
-      }
-
-      h1 {
-        font-size: 36px;
-      }
-
-      .hero {
-        padding-top: 42px;
-      }
+      .section-head, .split, .finding, .qa-layout { grid-template-columns: 1fr; }
+      .tasks, .grid-3, .result-grid, .code-grid { grid-template-columns: 1fr 1fr; }
+      .stats { grid-template-columns: repeat(3, 1fr); }
+      .stat:nth-child(4) { border-left: 0; }
+      .stat:nth-child(n+4) { border-top: 1px solid var(--line); }
+      .qa-index { display: none; }
+      h1 { font-size: 36px; }
+      .title-subtitle { font-size: 22px; }
     }
-
     @media (max-width: 620px) {
-      .shell {
-        width: min(100% - 22px, 1120px);
-      }
-
-      .nav {
-        align-items: flex-start;
-        flex-direction: column;
-        padding: 12px 0;
-      }
-
-      h1 {
-        font-size: 30px;
-      }
-
-      .title-subtitle {
-        font-size: 20px;
-      }
-
-      .subtitle {
-        font-size: 16px;
-      }
-
-      main section {
-        padding: 38px 0;
-      }
-
-      .readout {
-        grid-template-columns: 1fr;
-      }
-
-      .signal {
-        min-height: 0;
-      }
+      .shell { width: calc(100% - 32px); }
+      .nav { align-items: flex-start; flex-direction: column; padding: 10px 0; gap: 6px; }
+      .navlinks { justify-content: flex-start; }
+      .navlinks a { padding: 5px 8px; font-size: 13px; }
+      html { scroll-padding-top: 130px; }
+      h1 { font-size: 29px; }
+      .title-subtitle { font-size: 19px; }
+      .subtitle { font-size: 16px; }
+      main section { padding: 40px 0; }
+      .tasks, .grid-3, .result-grid, .code-grid { grid-template-columns: 1fr; }
+      .stats { grid-template-columns: 1fr 1fr; }
+      .stat { border-left: 0 !important; border-top: 1px solid var(--line); }
+      .stat:nth-child(-n+2) { border-top: 0; }
+      .stat:nth-child(even) { border-left: 1px solid var(--line) !important; }
+      .qa-a { padding-left: 16px; }
+      details.qa summary { grid-template-columns: 40px minmax(0, 1fr) 16px; padding: 12px; font-size: 15px; }
+      .bar-row { grid-template-columns: 110px 1fr 52px; }
+      .qa-toolbar input { min-width: 0; flex: 1 1 100%; }
+      .finding { padding: 16px; gap: 16px; }
+      .mini { font-size: 13px; }
+      .mini th, .mini td { padding: 6px 4px; }
+    }
+    @media print {
+      .topbar, .qa-toolbar, .tabs, .qa-index { display: none; }
+      details.qa > .qa-a { display: block; }
+      .table-panel[hidden] { display: block !important; }
     }
   </style>
 </head>
 <body>
   <header class="topbar">
-    <div class="shell nav" aria-label="Project navigation">
-      <div class="brand">InclusiveVLM-LEP</div>
-      <nav class="navlinks">
-        <a href="#benchmark">Benchmark</a>
-        <a href="#readouts">Readouts</a>
-        <a href="#evidence">Evidence</a>
+    <div class="shell nav">
+      <a class="brand" href="#top">InclusiveVLM-LimbEvidence</a>
+      <nav class="navlinks" aria-label="Page sections">
+        <a href="#abstract">Abstract</a>
+        <a href="#tasks">Tasks</a>
+        <a href="#data">Data</a>
         <a href="#results">Results</a>
+        <a href="#findings">Findings</a>
+        <a href="#qa" class="qa-link">Reviewer Q&amp;A</a>
         <a href="#code">Code</a>
-        <a href="#scope">Scope</a>
+        <a href="#ethics">Ethics</a>
       </nav>
     </div>
   </header>
 
-  <section class="hero">
+  <section class="hero" id="top">
     <div class="shell">
-      <div class="label">Anonymous NeurIPS E&amp;D 2026 submission</div>
-      <h1>Seeing Is Not Enough</h1>
-      <p class="title-subtitle">Evaluating Limb-Evidence Preservation in Vision-Language Models on Images of Individuals with Limb Deficiencies</p>
+      <div class="label">Anonymous ICLR 2027 submission</div>
+      <h1>InclusiveVLM-LimbEvidence</h1>
+      <p class="title-subtitle">Evaluating Vision-Language Models on Images of Individuals with Limb Deficiencies</p>
       <p class="subtitle">
-        InclusiveVLM-LEP is a test-only human-calibrated benchmark on open-world images of individuals with limb deficiencies. It links readouts through a shared annotation basis, moving from coarse recognition to body-region attribution and compatibility-style option matching.
+        A test-only benchmark on about 17k open-world images. It separates <b>detecting</b> limb evidence, <b>assigning</b> it to the correct body region and side, and <b>using</b> it in compatibility-style structured decisions.
       </p>
       <div class="actions">
-        <a class="button primary" href="https://github.com/Anonymous-Accept/InclusiveVLM-LEP">Code Repository</a>
-        <a class="button" href="#code">Repository Layout</a>
-        <a class="button" href="#scope">Responsible Use</a>
+        <a class="button primary" href="#qa">
+          <svg viewBox="0 0 24 24" aria-hidden="true"><circle cx="12" cy="12" r="10"></circle><path d="M9.1 9a3 3 0 0 1 5.8 1c0 2-3 3-3 3"></path><path d="M12 17h.01"></path></svg>
+          Reviewer Q&amp;A (26 questions)
+        </a>
+        <a class="button" href="#results">
+          <svg viewBox="0 0 24 24" aria-hidden="true"><path d="M3 3v18h18"></path><path d="M7 15v2M11 11v6M15 7v10M19 13v4"></path></svg>
+          Results tables
+        </a>
+        <a class="button" href="https://github.com/Anonymous-Accept/InclusiveVLM-LimbEvidence">
+          <svg viewBox="0 0 24 24" aria-hidden="true"><path d="m16 18 6-6-6-6"></path><path d="m8 6-6 6 6 6"></path></svg>
+          Code repository
+        </a>
       </div>
-      <div class="signal-grid" aria-label="Inclusive evaluation signals">
-        <div class="signal">
-          <div class="signal-icon" aria-hidden="true">
-            <svg viewBox="0 0 24 24">
-              <path d="M16 21v-2a4 4 0 0 0-4-4H6a4 4 0 0 0-4 4v2"></path>
-              <circle cx="9" cy="7" r="4"></circle>
-              <path d="M22 21v-2a4 4 0 0 0-3-3.87"></path>
-              <path d="M16 3.13a4 4 0 0 1 0 7.75"></path>
-            </svg>
-          </div>
-          <div>
-            <strong>Inclusive Evaluation</strong>
-            <span>Centers images of individuals with limb deficiencies in VLM evaluation.</span>
-          </div>
-        </div>
-        <div class="signal">
-          <div class="signal-icon" aria-hidden="true">
-            <svg viewBox="0 0 24 24">
-              <path d="M2 12s3.5-7 10-7 10 7 10 7-3.5 7-10 7S2 12 2 12Z"></path>
-              <circle cx="12" cy="12" r="3"></circle>
-            </svg>
-          </div>
-          <div>
-            <strong>Limb-Evidence Preservation</strong>
-            <span>Measures whether visible evidence survives from Presence to Attribution.</span>
-          </div>
-        </div>
-        <div class="signal">
-          <div class="signal-icon" aria-hidden="true">
-            <svg viewBox="0 0 24 24">
-              <path d="M9 11l3 3L22 4"></path>
-              <path d="M21 12v7a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2V5a2 2 0 0 1 2-2h11"></path>
-            </svg>
-          </div>
-          <div>
-            <strong>Human-Calibrated Protocol</strong>
-            <span>Uses human baselines to calibrate task solvability under the benchmark protocol.</span>
-          </div>
-        </div>
-        <div class="signal">
-          <div class="signal-icon" aria-hidden="true">
-            <svg viewBox="0 0 24 24">
-              <path d="M12 22s8-4 8-10V5l-8-3-8 3v7c0 6 8 10 8 10Z"></path>
-              <path d="M9 12l2 2 4-4"></path>
-            </svg>
-          </div>
-          <div>
-            <strong>Diagnostic Boundary</strong>
-            <span>Not clinical, prosthetic recommendation, or personalized prescription tooling.</span>
-          </div>
-        </div>
+
+      <div class="stats" aria-label="Benchmark scale">
+        <div class="stat"><b>16,850</b><span>open-world source images</span></div>
+        <div class="stat"><b>52,812</b><span>direct evidence queries (Presence + Attribution)</span></div>
+        <div class="stat"><b>20,664</b><span>Compatibility instances (Category + Diversity)</span></div>
+        <div class="stat"><b>21</b><span>model variants from 6 VLM families</span></div>
+        <div class="stat"><b>5</b><span>human raters as a reference</span></div>
       </div>
+
       <figure class="paper-figure">
-        <img src="assets/figures/teaser.png" alt="InclusiveVLM-LEP teaser figure showing Limb-Evidence Grounding and Compatibility-Style Matching examples.">
-        <figcaption>Limb-Evidence Grounding queries and Prosthesis Matching instances use the same visible evidence basis, moving from Presence to Attribution and compatibility-style option matching.</figcaption>
+        <a class="zoom" href="assets/figures/teaser_overview.jpg"><img src="assets/figures/teaser_overview.jpg" width="2614" height="1251" alt="Overview of InclusiveVLM-LimbEvidence in three panels. Panel 1, visible evidence: open-world images with annotated left and right calf prostheses. Panel 2, direct evidence tasks: Presence asks whether a residual or prosthetic limb is visible (answer: prosthetic only); Attribution asks which body regions show evidence, answered in Constrained form (calf_l_prosthesis, calf_r_prosthesis) or Free-form text. Panel 3, compatibility tasks: Compatibility-Category picks the option matching the visible limb deficiency, and Compatibility-Diversity requires selecting all compatible options (exact set recovery)."></a>
+        <figcaption><b>Figure 1. Overview of InclusiveVLM-LimbEvidence.</b> Open-world images of individuals with limb deficiencies support three evaluation requirements. LimbEvidence-Presence tests evidence detection. LimbEvidence-Attribution assigns evidence to body regions and sides in parallel Constrained and FreeForm formats. LimbEvidence-Compatibility tests category relations and complete option sets through parallel Category and Diversity probes. The arrows summarize increasingly specific requirements across tasks that are evaluated separately.</figcaption>
       </figure>
     </div>
   </section>
 
   <main>
-    <section id="benchmark">
+    <section id="abstract">
       <div class="shell">
         <div class="section-head">
-          <h2>Benchmark Framing</h2>
-          <p class="section-note">A diagnostic benchmark for limb-evidence preservation in general-purpose vision-language models.</p>
+          <div><span class="eyebrow">Abstract</span><h2>Recognizing limb evidence is not the same as using it correctly</h2></div>
         </div>
-        <div class="construct">
-          <article class="card stripe-green">
-            <h3>Limb-Evidence Grounding</h3>
-            <p>Queries evaluate whether visible residual-limb evidence and prosthetic-device evidence are preserved from Presence to Attribution.</p>
+        <div class="prose">
+          <p>Strong performance on general benchmarks does not establish whether vision-language models (VLMs) correctly interpret images of individuals with limb deficiencies. For this population, applications such as preparing visual evidence for Paralympic athlete classification depend on correctly identifying residual limbs, prosthetic devices, and body-device configurations. We find that VLMs can miss this evidence or assign it to the wrong body regions, so later reasoning begins from incorrect visual information.</p>
+          <p>To examine these failures, we introduce InclusiveVLM-LimbEvidence, a test-only benchmark on about 17k open-world images of this population. It provides over 52k direct evidence queries and over 20k compatibility instances, with human reference results and prompt paraphrases. The design separates recognizing evidence from using it in structured decisions. LimbEvidence-Presence tests evidence detection. Because detection alone does not establish where evidence belongs, LimbEvidence-Attribution tests body-region assignment in parallel Constrained and FreeForm formats. To examine whether models can also use this evidence in structured decisions, LimbEvidence-Compatibility tests option matching under benchmark-defined relations through parallel Category and Diversity probes.</p>
+          <p>Across widely used general-purpose VLMs, models often detect limb evidence but fail to identify its body region or side. Partial option matches often fall short of complete compatible-set recovery. Models can also repeat the same incorrect answer across paraphrases. The larger model in our scale comparison improves coarse detection but does not resolve attribution and set-recovery errors. These results reveal a gap between recognizing limb evidence and using its spatial and relational details correctly. They also show that response consistency cannot replace correctness. InclusiveVLM-LimbEvidence makes these overlooked capability limits measurable and supports research toward visual AI that better serves individuals with limb deficiencies.</p>
+        </div>
+      </div>
+    </section>
+
+    <section id="tasks" class="alt">
+      <div class="shell">
+        <div class="section-head">
+          <div><span class="eyebrow">Evaluation design</span><h2>Three requirements, evaluated separately</h2></div>
+          <p class="section-note">Each requirement asks for information that the previous one cannot supply. The tasks share an annotation framework but are scored independently. No model output is passed from one task to the next.</p>
+        </div>
+        <div class="tasks">
+          <article class="card task t1 stripe-blue">
+            <span class="step">1</span>
+            <h3>LimbEvidence-Presence</h3>
+            <p class="q">Which types of limb evidence are visible?</p>
+            <p>Choose one of four image-level labels: residual-limb evidence only, prosthetic-device evidence only, both, or neither.</p>
+            <span class="metric">Accuracy &middot; macro-F1</span>
           </article>
-          <article class="card stripe-amber">
-            <h3>Prosthesis Matching</h3>
-            <p>Instances evaluate compatibility-style option matching from visible body-device configuration evidence.</p>
+          <article class="card task t2 stripe-green">
+            <span class="step">2</span>
+            <h3>LimbEvidence-Attribution</h3>
+            <p class="q">Where does the evidence belong on the body?</p>
+            <p>Assign each evidence type to a body region and side. There are 8 segments (left/right upper arm, forearm, thigh, calf) &times; 2 evidence types = 16 labels, plus <code>none</code>.</p>
+            <ul>
+              <li><b>Constrained</b>: select labels from the fixed 16-label space.</li>
+              <li><b>FreeForm</b>: answer in text that a deterministic parser normalizes to the same labels (500 paired items).</li>
+            </ul>
+            <span class="metric">Set mIoU (label-set overlap)</span>
+          </article>
+          <article class="card task t3 stripe-amber">
+            <span class="step">3</span>
+            <h3>LimbEvidence-Compatibility</h3>
+            <p class="q">Which candidate devices match the visible configuration?</p>
+            <p>Match candidates under a fixed body-part correspondence. This is structured visual matching, not a prescription decision.</p>
+            <ul>
+              <li><b>Category</b>: pick one option whose body-part category matches.</li>
+              <li><b>Diversity</b>: return the complete matching set from visually varied options and distractors. The set can be empty.</li>
+            </ul>
+            <span class="metric">Accuracy &middot; F1 / Exact / Partial</span>
           </article>
         </div>
+        <figure class="paper-figure">
+          <a class="zoom" href="assets/figures/limb_evidence_task_examples.jpg"><img src="assets/figures/limb_evidence_task_examples.jpg" width="2402" height="1346" loading="lazy" alt="Example prompts and targets for one rehabilitation image. Presence prompt with four options; ground truth b (prosthetic limb only). Attribution prompt asking for a comma-separated list of segment labels; ground truth thigh_l_prosthesis. Compatibility-Diversity grid of eight prosthesis options with ground truth A, B, C, E, G, H. Compatibility-Category grid of four options with ground truth D."></a>
+          <figcaption><b>Figure 2. Example evaluation tasks.</b> For the highlighted individual, LimbEvidence-Presence identifies prosthetic-device evidence, while LimbEvidence-Attribution specifies <code>thigh_l_prosthesis</code>. Below, the parallel probes of LimbEvidence-Compatibility use separate option grids. Diversity requires the complete set A, B, C, E, G, and H, while Category matches D. Checks mark target options and crosses mark distractors, not model predictions.</figcaption>
+        </figure>
       </div>
     </section>
 
-    <section id="readouts">
+    <section id="data">
       <div class="shell">
         <div class="section-head">
-          <h2>Main Readouts</h2>
-          <p class="section-note">Presence, Attribution, and Compatibility are reported through paper-facing task variants.</p>
+          <div><span class="eyebrow">Data and annotations</span><h2>New limb-evidence annotations on open-world images</h2></div>
+          <p class="section-note">We reuse images from the LDPose source pool. The residual-limb and prosthetic-device masks, body-region labels, and body-device records are new to this benchmark.</p>
         </div>
-        <div>
-          <div class="readout">
-            <div>
-              <strong>Presence</strong>
-              <span class="pill green">Limb-Evidence Grounding</span>
-            </div>
-            <p>Coarse recognition of visible residual-limb and prosthetic-limb evidence.</p>
+        <div class="split">
+          <div>
+            <table class="counts">
+              <thead><tr><th>Evaluation</th><th style="text-align:right">Records / images</th></tr></thead>
+              <tbody>
+                <tr><td>Presence<small>1 of 4 image-level labels</small></td><td class="n">26,406 / 8,802</td></tr>
+                <tr><td>Attribution-Constrained<small>16 segment-type labels + <code>none</code></small></td><td class="n">26,406 / 8,802</td></tr>
+                <tr><td>Attribution-FreeForm<small>Paired output-format diagnostic</small></td><td class="n">500 paired items</td></tr>
+                <tr><td>Compatibility-Category<small>One accepted category</small></td><td class="n">8,048 / 8,048</td></tr>
+                <tr><td>Compatibility-Diversity<small>Complete matching set (may be empty)</small></td><td class="n">12,616 / 8,048</td></tr>
+              </tbody>
+            </table>
+            <p class="table-note">Counts are images and evaluation records, not distinct people. Candidate prosthesis options come from 7,497 source images that show prosthetic devices.</p>
           </div>
-          <div class="readout">
-            <div>
-              <strong>Attribution</strong>
-              <span class="pill green">Limb-Evidence Grounding</span>
-            </div>
-            <p>Attribution-Constrained and Attribution-FreeForm variants evaluate body-region attribution over the same annotation basis. Free-form textual responses are normalized to canonical attribution labels with a deterministic parser.</p>
-          </div>
-          <div class="readout">
-            <div>
-              <strong>Compatibility</strong>
-              <span class="pill amber">Prosthesis Matching</span>
-            </div>
-            <p>Compatibility-Category and Compatibility-Diversity variants evaluate compatible-set recovery under structured answer spaces.</p>
-          </div>
+          <ul class="bullets">
+            <li><b>Pixel-level masks</b> separate visible residual-limb and prosthetic-device regions. The two types never share pixels but can occur in the same limb segment.</li>
+            <li><b>Visible evidence only.</b> Unseen anatomy and intact limbs are outside the annotation target. Left and right refer to the depicted individual.</li>
+            <li><b>Reviewed targets.</b> A second annotator reviews each mask and label set, including accepted categories and matching option sets. Disagreements above tolerance are re-annotated and adjudicated. Periodic spot audits check randomly sampled batches.</li>
+            <li><b>Professional input.</b> An International Paralympic Committee certified classifier supported annotation guidance and case adjudication. The authors defined the probes.</li>
+            <li><b>Test-only.</b> There is no training split. Structured answer spaces, deterministic normalization, and prompt paraphrase groups support reproducible scoring.</li>
+          </ul>
         </div>
+        <figure class="paper-figure" style="margin-top: 30px;">
+          <a class="zoom" href="assets/figures/open_world_image_annotations.jpg"><img src="assets/figures/open_world_image_annotations.jpg" width="2612" height="1637" loading="lazy" alt="Panel (a): a collage of face-blurred open-world images of individuals with limb deficiencies in everyday, rehabilitation, and sport settings. Panel (b): separate masks for right calf residual limb and right calf prosthesis, and for left calf residual limb and left calf prosthesis. Panel (c): labeled examples linking evidence to body regions and sides, such as right upper arm residual, left thigh prosthesis, and left calf prosthesis."></a>
+          <figcaption><b>Figure 3. Open-world images and limb-evidence annotations.</b> (a) Images of individuals with limb deficiencies cover everyday activities, rehabilitation, and sport. (b) Separate masks distinguish visible residual-limb and prosthetic-device regions, which can share a limb segment. (c) Labeled examples link evidence types to body regions and sides.</figcaption>
+        </figure>
       </div>
     </section>
 
-    <section id="evidence">
+    <section id="results" class="alt">
       <div class="shell">
         <div class="section-head">
-          <h2>Open-World Images And Annotation Basis</h2>
-          <p class="section-note">InclusiveVLM-LEP links open-world images to a shared annotation basis for visible residual-limb and prosthetic-device evidence.</p>
-        </div>
-        <div class="figure-stack">
-          <div class="figure-group">
-            <h3>Open-World Image Coverage</h3>
-            <p class="group-note">The benchmark uses open-world images of individuals with limb deficiencies across varied scenes, poses, activities, residual-limb evidence, and prosthetic-device evidence.</p>
-            <div class="figure-panel-grid three" aria-label="Open-world image coverage">
-              <figure class="panel-figure narrow">
-                <div class="crop-window" style="--image-w:2200; --image-h:1379; --crop-x:0; --crop-y:0; --crop-w:1206; --crop-h:1308;">
-                  <img src="assets/figures/open_world_image_annotations.png" alt="Open-world images of individuals with limb deficiencies.">
-                </div>
-                <figcaption><strong>Open-world images.</strong> The image collection covers varied everyday, rehabilitation, sports, and public-scene contexts.</figcaption>
-              </figure>
-            </div>
-          </div>
-
-          <div class="figure-group">
-            <h3>Shared Annotation Basis</h3>
-            <p class="group-note">Visible residual-limb and prosthetic-device evidence is connected to body-region attribution labels, allowing readouts to move from coarse recognition to Attribution.</p>
-            <div class="figure-panel-grid three" aria-label="Shared annotation basis">
-              <figure class="panel-figure medium">
-                <div class="crop-window" style="--image-w:2200; --image-h:1379; --crop-x:1272; --crop-y:14; --crop-w:890; --crop-h:360;">
-                  <img src="assets/figures/open_world_image_annotations.png" alt="Visible residual-limb and prosthetic-device evidence annotation example.">
-                </div>
-                <figcaption><strong>Visible evidence and labels.</strong> Residual-limb and prosthetic-device evidence is tied to body-region labels used by the benchmark.</figcaption>
-              </figure>
-              <figure class="panel-figure medium">
-                <div class="crop-window" style="--image-w:2200; --image-h:1379; --crop-x:1240; --crop-y:456; --crop-w:930; --crop-h:855;">
-                  <img src="assets/figures/open_world_image_annotations.png" alt="Additional annotation examples for visible residual-limb and prosthetic-device evidence.">
-                </div>
-                <figcaption><strong>Annotation basis across images.</strong> The same evidence basis supports Presence, Attribution, and Compatibility readouts.</figcaption>
-              </figure>
-            </div>
-          </div>
-        </div>
-      </div>
-    </section>
-
-    <section id="results">
-      <div class="shell">
-        <div class="section-head">
-          <h2>Benchmark Results</h2>
-          <p class="section-note">The benchmark exposes structured failures in limb-evidence preservation.</p>
+          <div><span class="eyebrow">Main results</span><h2>Clear gaps to the human reference</h2></div>
+          <p class="section-note">21 model variants from Qwen3-VL, Gemma-3, DeepSeek-VL2, Ministral-3, GPT-5, and Gemini-2.5. Five human raters provide a reference against the reviewed targets.</p>
         </div>
         <div class="result-grid">
-          <article class="card metric-card stripe-green">
-            <span class="metric-label">Presence Accuracy</span>
-            <div class="metric-value">98.0% / 77.2%</div>
-            <p class="metric-detail">Human raters reach 98.0% Presence accuracy; the strongest model reaches 77.2%.</p>
-          </article>
           <article class="card metric-card stripe-blue">
-            <span class="metric-label">Attribution-Constrained</span>
-            <div class="metric-value">83.4% / 29.4%</div>
-            <p class="metric-detail">Human raters reach 83.4% set mIoU; the strongest model reaches 29.4%, showing that coarse recognition does not ensure limb-evidence preservation.</p>
+            <span class="metric-label">Presence &middot; accuracy</span>
+            <div class="vs"><div class="h"><b>98.0</b><span>Human</span></div><div><b>77.2</b><span>Best model (GPT-5)</span></div></div>
+            <p class="metric-detail">Detection is the strongest capability, but accuracy can hide category differences. GPT-5 macro-F1 is 50.0.</p>
+          </article>
+          <article class="card metric-card stripe-green">
+            <span class="metric-label">Attribution &middot; set mIoU</span>
+            <div class="vs"><div class="h"><b>83.4</b><span>Human</span></div><div><b>29.4</b><span>Best model (GPT-5)</span></div></div>
+            <p class="metric-detail">Assigning evidence to the right body region and side is the largest gap.</p>
           </article>
           <article class="card metric-card stripe-amber">
-            <span class="metric-label">Compatibility-Category</span>
-            <div class="metric-value">56.0% / 37.3%</div>
-            <p class="metric-detail">Human raters reach 56.0% accuracy; the strongest model reaches 37.3%, leaving substantial headroom for category-level matching.</p>
+            <span class="metric-label">Category &middot; accuracy</span>
+            <div class="vs"><div class="h"><b>56.0</b><span>Human</span></div><div><b>39.7</b><span>Best model (Qwen3-VL-235B)</span></div></div>
+            <p class="metric-detail">Scored as a hit on the accepted category set. Several categories can be acceptable.</p>
           </article>
           <article class="card metric-card stripe-red">
-            <span class="metric-label">Compatibility-Diversity</span>
-            <div class="metric-value">~10% / &gt;80%</div>
-            <p class="metric-detail">The strongest runs reach only around 10% Exact-set accuracy, while Partial accuracy can exceed 80%.</p>
+            <span class="metric-label">Diversity &middot; set recovery</span>
+            <div class="vs"><div><b>10.2</b><span>Best Exact</span></div><div><b>84.5</b><span>Partial, same model</span></div></div>
+            <p class="metric-detail">DeepSeek-VL2-Tiny often hits some targets but rarely recovers the complete set. Human Exact is 12.0 and human F1 is 57.9.</p>
           </article>
         </div>
-        <p class="result-note">The submitted paper reports all scores as percentages with 95% confidence intervals. This page surfaces the headline values that support the paper's diagnostic claims, rather than reproducing full result tables.</p>
 
-        <div class="figure-stack" style="margin-top: 28px;">
-          <div class="figure-group">
-            <h3>Qualitative Failure Structure</h3>
-            <p class="group-note">Qualitative examples show how benchmark variants reveal failures that are structured rather than uniform.</p>
-            <div class="figure-panel-grid two" aria-label="Qualitative failure panels">
-              <figure class="panel-figure medium">
-                <div class="crop-window" style="--image-w:2200; --image-h:812; --crop-x:0; --crop-y:0; --crop-w:1300; --crop-h:812;">
-                  <img src="assets/figures/failure_case.png" alt="Qualitative Limb-Evidence Grounding failure examples.">
-                </div>
-                <figcaption><strong>Presence does not guarantee Attribution.</strong> Coarse Presence can be correct while the more specific evidence readout fails.</figcaption>
-              </figure>
-              <figure class="panel-figure medium">
-                <div class="crop-window" style="--image-w:2200; --image-h:812; --crop-x:1320; --crop-y:0; --crop-w:880; --crop-h:812;">
-                  <img src="assets/figures/failure_case.png" alt="Qualitative Prosthesis Matching failure example.">
-                </div>
-                <figcaption><strong>Compatibility-style option matching.</strong> Plausible option selection can fall short of exact compatible-set recovery.</figcaption>
-              </figure>
+        <div class="tabs" role="tablist" aria-label="Result tables">
+          <button class="tab" role="tab" id="tab-direct" aria-controls="panel-direct" aria-selected="true">Table 1 &middot; Presence &amp; Attribution</button>
+          <button class="tab" role="tab" id="tab-compat" aria-controls="panel-compat" aria-selected="false">Table 2 &middot; Compatibility</button>
+        </div>
+        <div class="table-panel" id="panel-direct" role="tabpanel" aria-labelledby="tab-direct">
+<div class="table-wrap" role="region" aria-label="Table 1. Direct limb-evidence recognition (LimbEvidence-Presence and LimbEvidence-Attribution). Scores are percentages with 95% interval half-widths. FreeForm set mIoU is computed on 500 paired items. Consistency is correctness-gated. Bold marks the highest model score." tabindex="0">
+<table class="results" id="table-direct">
+<caption>Table 1. Direct limb-evidence recognition (LimbEvidence-Presence and LimbEvidence-Attribution). Scores are percentages with 95% interval half-widths. FreeForm set mIoU is computed on 500 paired items. Consistency is correctness-gated. Bold marks the highest model score.</caption>
+<thead><tr><th rowspan="2" scope="col">Family</th><th rowspan="2" scope="col">Model</th>
+<th colspan="3" scope="colgroup" class="grp">LimbEvidence-Presence</th>
+<th colspan="4" scope="colgroup" class="grp">Attribution-Constrained</th>
+<th colspan="1" scope="colgroup" class="grp">FreeForm</th>
+</tr><tr>
+<th scope="col" class="primary">Accuracy</th>
+<th scope="col">Macro-F1</th>
+<th scope="col">Gated consistency</th>
+<th scope="col" class="primary">Set mIoU</th>
+<th scope="col">Micro-F1</th>
+<th scope="col">Macro-F1</th>
+<th scope="col">Gated consistency</th>
+<th scope="col">Set mIoU</th>
+</tr></thead><tbody>
+<tr class="fam-start">
+<th scope="rowgroup" rowspan="7" class="fam">Qwen3-VL</th>
+<th scope="row" class="model">4B-Inst</th>
+<td class="num primary">41.9<span class="ci">&plusmn;0.6</span></td>
+<td class="num">30.1<span class="ci">&plusmn;0.5</span></td>
+<td class="num">60.7<span class="ci">&plusmn;0.7</span></td>
+<td class="num primary">17.0<span class="ci">&plusmn;0.3</span></td>
+<td class="num">25.4<span class="ci">&plusmn;0.4</span></td>
+<td class="num">18.4<span class="ci">&plusmn;0.4</span></td>
+<td class="num">45.8<span class="ci">&plusmn;3.0</span></td>
+<td class="num">37.7<span class="ci">&plusmn;2.2</span></td>
+</tr>
+<tr>
+<th scope="row" class="model">8B-Inst</th>
+<td class="num primary">41.4<span class="ci">&plusmn;0.6</span></td>
+<td class="num">32.0<span class="ci">&plusmn;0.4</span></td>
+<td class="num">61.7<span class="ci">&plusmn;0.7</span></td>
+<td class="num primary">18.8<span class="ci">&plusmn;0.4</span></td>
+<td class="num">28.2<span class="ci">&plusmn;0.4</span></td>
+<td class="num">21.5<span class="ci">&plusmn;0.5</span></td>
+<td class="num">51.3<span class="ci">&plusmn;2.5</span></td>
+<td class="num">35.2<span class="ci">&plusmn;2.1</span></td>
+</tr>
+<tr>
+<th scope="row" class="model">30B-A3B-Inst</th>
+<td class="num primary">23.9<span class="ci">&plusmn;0.5</span></td>
+<td class="num">21.8<span class="ci">&plusmn;0.3</span></td>
+<td class="num">84.3<span class="ci">&plusmn;1.0</span></td>
+<td class="num primary">24.0<span class="ci">&plusmn;0.5</span></td>
+<td class="num">32.4<span class="ci">&plusmn;0.5</span></td>
+<td class="num">21.3<span class="ci">&plusmn;0.6</span></td>
+<td class="num">68.3<span class="ci">&plusmn;1.4</span></td>
+<td class="num">30.2<span class="ci">&plusmn;1.9</span></td>
+</tr>
+<tr>
+<th scope="row" class="model">235B-A22B-Inst</th>
+<td class="num primary">74.2<span class="ci">&plusmn;0.8</span></td>
+<td class="num">43.8<span class="ci">&plusmn;0.3</span></td>
+<td class="num">91.6<span class="ci">&plusmn;0.8</span></td>
+<td class="num primary">24.8<span class="ci">&plusmn;0.7</span></td>
+<td class="num">34.2<span class="ci">&plusmn;0.3</span></td>
+<td class="num">23.6<span class="ci">&plusmn;0.4</span></td>
+<td class="num">68.5<span class="ci">&plusmn;4.5</span></td>
+<td class="num best">45.7<span class="ci">&plusmn;1.7</span></td>
+</tr>
+<tr>
+<th scope="row" class="model">4B-Think</th>
+<td class="num primary">40.6<span class="ci">&plusmn;0.6</span></td>
+<td class="num">30.1<span class="ci">&plusmn;0.5</span></td>
+<td class="num">66.7<span class="ci">&plusmn;0.7</span></td>
+<td class="num primary">17.8<span class="ci">&plusmn;0.3</span></td>
+<td class="num">27.2<span class="ci">&plusmn;0.4</span></td>
+<td class="num">19.3<span class="ci">&plusmn;0.5</span></td>
+<td class="num">55.5<span class="ci">&plusmn;3.7</span></td>
+<td class="num">43.1<span class="ci">&plusmn;1.9</span></td>
+</tr>
+<tr>
+<th scope="row" class="model">8B-Think</th>
+<td class="num primary">35.3<span class="ci">&plusmn;0.6</span></td>
+<td class="num">28.8<span class="ci">&plusmn;0.4</span></td>
+<td class="num">66.0<span class="ci">&plusmn;0.7</span></td>
+<td class="num primary">16.2<span class="ci">&plusmn;0.3</span></td>
+<td class="num">25.3<span class="ci">&plusmn;0.4</span></td>
+<td class="num">20.4<span class="ci">&plusmn;0.5</span></td>
+<td class="num">47.6<span class="ci">&plusmn;2.5</span></td>
+<td class="num">44.7<span class="ci">&plusmn;2.1</span></td>
+</tr>
+<tr>
+<th scope="row" class="model">30B-A3B-Think</th>
+<td class="num primary">33.6<span class="ci">&plusmn;0.6</span></td>
+<td class="num">29.2<span class="ci">&plusmn;0.4</span></td>
+<td class="num">70.3<span class="ci">&plusmn;0.8</span></td>
+<td class="num primary">19.4<span class="ci">&plusmn;0.4</span></td>
+<td class="num">24.1<span class="ci">&plusmn;0.3</span></td>
+<td class="num">18.7<span class="ci">&plusmn;0.3</span></td>
+<td class="num">52.5<span class="ci">&plusmn;2.2</span></td>
+<td class="num">38.8<span class="ci">&plusmn;2.2</span></td>
+</tr>
+<tr class="fam-start">
+<th scope="rowgroup" rowspan="3" class="fam">Gemma-3</th>
+<th scope="row" class="model">4B</th>
+<td class="num primary">33.0<span class="ci">&plusmn;0.6</span></td>
+<td class="num">25.6<span class="ci">&plusmn;0.4</span></td>
+<td class="num">62.8<span class="ci">&plusmn;1.0</span></td>
+<td class="num primary">20.5<span class="ci">&plusmn;0.4</span></td>
+<td class="num">26.1<span class="ci">&plusmn;0.4</span></td>
+<td class="num">19.4<span class="ci">&plusmn;0.3</span></td>
+<td class="num">52.4<span class="ci">&plusmn;2.8</span></td>
+<td class="num">26.5<span class="ci">&plusmn;1.7</span></td>
+</tr>
+<tr>
+<th scope="row" class="model">12B</th>
+<td class="num primary">29.9<span class="ci">&plusmn;0.6</span></td>
+<td class="num">24.6<span class="ci">&plusmn;0.3</span></td>
+<td class="num">85.2<span class="ci">&plusmn;0.9</span></td>
+<td class="num primary">24.2<span class="ci">&plusmn;0.4</span></td>
+<td class="num">33.0<span class="ci">&plusmn;0.5</span></td>
+<td class="num">25.3<span class="ci">&plusmn;0.6</span></td>
+<td class="num">54.9<span class="ci">&plusmn;1.7</span></td>
+<td class="num">20.4<span class="ci">&plusmn;1.3</span></td>
+</tr>
+<tr>
+<th scope="row" class="model">27B</th>
+<td class="num primary">38.6<span class="ci">&plusmn;0.6</span></td>
+<td class="num">30.2<span class="ci">&plusmn;0.4</span></td>
+<td class="num">68.1<span class="ci">&plusmn;0.8</span></td>
+<td class="num primary">27.8<span class="ci">&plusmn;0.4</span></td>
+<td class="num">37.2<span class="ci">&plusmn;0.5</span></td>
+<td class="num">24.4<span class="ci">&plusmn;0.7</span></td>
+<td class="num">69.4<span class="ci">&plusmn;1.7</span></td>
+<td class="num">24.4<span class="ci">&plusmn;1.6</span></td>
+</tr>
+<tr class="fam-start">
+<th scope="rowgroup" rowspan="3" class="fam">DeepSeek-VL2</th>
+<th scope="row" class="model">Tiny</th>
+<td class="num primary">19.4<span class="ci">&plusmn;3.5</span></td>
+<td class="num">9.8<span class="ci">&plusmn;1.4</span></td>
+<td class="num">66.3<span class="ci">&plusmn;7.1</span></td>
+<td class="num primary">6.5<span class="ci">&plusmn;0.1</span></td>
+<td class="num">11.1<span class="ci">&plusmn;0.2</span></td>
+<td class="num">9.1<span class="ci">&plusmn;0.2</span></td>
+<td class="num">65.4<span class="ci">&plusmn;0.7</span></td>
+<td class="num">18.7<span class="ci">&plusmn;1.8</span></td>
+</tr>
+<tr>
+<th scope="row" class="model">Small</th>
+<td class="num primary">27.7<span class="ci">&plusmn;3.9</span></td>
+<td class="num">15.4<span class="ci">&plusmn;1.9</span></td>
+<td class="num">91.0<span class="ci">&plusmn;5.5</span></td>
+<td class="num primary">9.4<span class="ci">&plusmn;0.4</span></td>
+<td class="num">17.3<span class="ci">&plusmn;0.7</span></td>
+<td class="num">15.8<span class="ci">&plusmn;0.8</span></td>
+<td class="num">80.2<span class="ci">&plusmn;3.9</span></td>
+<td class="num">12.3<span class="ci">&plusmn;1.5</span></td>
+</tr>
+<tr>
+<th scope="row" class="model">27B-MoE</th>
+<td class="num primary">34.0<span class="ci">&plusmn;7.7</span></td>
+<td class="num">12.7<span class="ci">&plusmn;2.1</span></td>
+<td class="num">100.0<span class="ci">&plusmn;0.0</span></td>
+<td class="num primary">3.4<span class="ci">&plusmn;1.3</span></td>
+<td class="num">19.2<span class="ci">&plusmn;4.2</span></td>
+<td class="num">16.1<span class="ci">&plusmn;4.7</span></td>
+<td class="num">50.0<span class="ci">&plusmn;11.1</span></td>
+<td class="num">27.4<span class="ci">&plusmn;1.3</span></td>
+</tr>
+<tr class="fam-start">
+<th scope="rowgroup" rowspan="6" class="fam">Ministral-3</th>
+<th scope="row" class="model">3B-Inst</th>
+<td class="num primary">51.0<span class="ci">&plusmn;0.7</span></td>
+<td class="num">31.9<span class="ci">&plusmn;0.5</span></td>
+<td class="num">66.1<span class="ci">&plusmn;0.7</span></td>
+<td class="num primary">10.2<span class="ci">&plusmn;0.3</span></td>
+<td class="num">21.5<span class="ci">&plusmn;0.4</span></td>
+<td class="num">12.0<span class="ci">&plusmn;0.4</span></td>
+<td class="num">23.1<span class="ci">&plusmn;3.1</span></td>
+<td class="num">0.0<span class="ci">&plusmn;0.0</span></td>
+</tr>
+<tr>
+<th scope="row" class="model">8B-Inst</th>
+<td class="num primary">37.1<span class="ci">&plusmn;0.6</span></td>
+<td class="num">25.8<span class="ci">&plusmn;0.4</span></td>
+<td class="num">61.0<span class="ci">&plusmn;0.7</span></td>
+<td class="num primary">1.4<span class="ci">&plusmn;0.1</span></td>
+<td class="num">5.0<span class="ci">&plusmn;0.3</span></td>
+<td class="num">3.6<span class="ci">&plusmn;0.3</span></td>
+<td class="num">44.0<span class="ci">&plusmn;6.0</span></td>
+<td class="num">37.8<span class="ci">&plusmn;2.1</span></td>
+</tr>
+<tr>
+<th scope="row" class="model">14B-Inst</th>
+<td class="num primary">29.3<span class="ci">&plusmn;0.6</span></td>
+<td class="num">22.2<span class="ci">&plusmn;0.3</span></td>
+<td class="num">78.3<span class="ci">&plusmn;0.9</span></td>
+<td class="num primary">10.8<span class="ci">&plusmn;0.3</span></td>
+<td class="num">21.5<span class="ci">&plusmn;0.5</span></td>
+<td class="num">10.5<span class="ci">&plusmn;0.5</span></td>
+<td class="num">33.3<span class="ci">&plusmn;1.9</span></td>
+<td class="num">37.6<span class="ci">&plusmn;2.1</span></td>
+</tr>
+<tr>
+<th scope="row" class="model">3B-Reason</th>
+<td class="num primary">22.4<span class="ci">&plusmn;0.5</span></td>
+<td class="num">17.4<span class="ci">&plusmn;0.4</span></td>
+<td class="num">64.0<span class="ci">&plusmn;1.0</span></td>
+<td class="num primary">10.4<span class="ci">&plusmn;0.3</span></td>
+<td class="num">22.4<span class="ci">&plusmn;0.4</span></td>
+<td class="num">16.1<span class="ci">&plusmn;0.4</span></td>
+<td class="num">27.5<span class="ci">&plusmn;7.1</span></td>
+<td class="num">16.2<span class="ci">&plusmn;1.6</span></td>
+</tr>
+<tr>
+<th scope="row" class="model">8B-Reason</th>
+<td class="num primary">24.8<span class="ci">&plusmn;0.6</span></td>
+<td class="num">20.3<span class="ci">&plusmn;0.4</span></td>
+<td class="num">58.4<span class="ci">&plusmn;0.9</span></td>
+<td class="num primary">2.9<span class="ci">&plusmn;0.2</span></td>
+<td class="num">9.5<span class="ci">&plusmn;0.4</span></td>
+<td class="num">6.8<span class="ci">&plusmn;0.4</span></td>
+<td class="num">46.1<span class="ci">&plusmn;6.0</span></td>
+<td class="num">36.2<span class="ci">&plusmn;2.0</span></td>
+</tr>
+<tr>
+<th scope="row" class="model">14B-Reason</th>
+<td class="num primary">25.0<span class="ci">&plusmn;0.5</span></td>
+<td class="num">19.8<span class="ci">&plusmn;0.3</span></td>
+<td class="num">76.3<span class="ci">&plusmn;1.0</span></td>
+<td class="num primary">2.3<span class="ci">&plusmn;0.1</span></td>
+<td class="num">8.5<span class="ci">&plusmn;0.4</span></td>
+<td class="num">5.3<span class="ci">&plusmn;0.4</span></td>
+<td class="num">75.0<span class="ci">&plusmn;12.5</span></td>
+<td class="num">28.9<span class="ci">&plusmn;1.9</span></td>
+</tr>
+<tr class="fam-start">
+<th scope="rowgroup" rowspan="1" class="fam">OpenAI</th>
+<th scope="row" class="model">GPT-5</th>
+<td class="num primary best">77.2<span class="ci">&plusmn;1.6</span></td>
+<td class="num best">50.0<span class="ci">&plusmn;1.4</span></td>
+<td class="num">86.9<span class="ci">&plusmn;1.5</span></td>
+<td class="num primary best">29.4<span class="ci">&plusmn;1.5</span></td>
+<td class="num best">38.5<span class="ci">&plusmn;1.6</span></td>
+<td class="num best">32.8<span class="ci">&plusmn;3.3</span></td>
+<td class="num">85.8<span class="ci">&plusmn;2.9</span></td>
+<td class="num">30.5<span class="ci">&plusmn;2.0</span></td>
+</tr>
+<tr class="fam-start">
+<th scope="rowgroup" rowspan="1" class="fam">Gemini</th>
+<th scope="row" class="model">Gemini-2.5</th>
+<td class="num primary">47.0<span class="ci">&plusmn;0.7</span></td>
+<td class="num">35.3<span class="ci">&plusmn;0.4</span></td>
+<td class="num">73.1<span class="ci">&plusmn;0.8</span></td>
+<td class="num primary">24.8<span class="ci">&plusmn;0.4</span></td>
+<td class="num">35.9<span class="ci">&plusmn;0.5</span></td>
+<td class="num">29.0<span class="ci">&plusmn;0.7</span></td>
+<td class="num">55.3<span class="ci">&plusmn;1.8</span></td>
+<td class="num">22.8<span class="ci">&plusmn;1.2</span></td>
+</tr>
+<tr class="fam-start human">
+<th scope="rowgroup" rowspan="1" class="fam">Human reference</th>
+<th scope="row" class="model">5 raters</th>
+<td class="num primary">98.0<span class="ci">&plusmn;3.0</span></td>
+<td class="num">69.6<span class="ci">&plusmn;12.9</span></td>
+<td class="na">&ndash;</td>
+<td class="num primary">83.4<span class="ci">&plusmn;9.1</span></td>
+<td class="num">85.0<span class="ci">&plusmn;7.5</span></td>
+<td class="num">73.1<span class="ci">&plusmn;18.0</span></td>
+<td class="na">&ndash;</td>
+<td class="na">&ndash;</td>
+</tr>
+</tbody></table></div>
+        </div>
+        <div class="table-panel" id="panel-compat" role="tabpanel" aria-labelledby="tab-compat" hidden>
+<div class="table-wrap" role="region" aria-label="Table 2. LimbEvidence-Compatibility. Category credits one selection from the accepted target set. Diversity Exact requires the whole set, while Partial requires at least one target hit. Precision, recall, and F1 are sample averages. Scores are percentages with 95% interval half-widths. Bold marks the highest model score." tabindex="0">
+<table class="results" id="table-compat">
+<caption>Table 2. LimbEvidence-Compatibility. Category credits one selection from the accepted target set. Diversity Exact requires the whole set, while Partial requires at least one target hit. Precision, recall, and F1 are sample averages. Scores are percentages with 95% interval half-widths. Bold marks the highest model score.</caption>
+<thead><tr><th rowspan="2" scope="col">Family</th><th rowspan="2" scope="col">Model</th>
+<th colspan="1" scope="colgroup" class="grp">Category</th>
+<th colspan="6" scope="colgroup" class="grp">Diversity</th>
+</tr><tr>
+<th scope="col" class="primary">Accuracy</th>
+<th scope="col" class="primary">Exact</th>
+<th scope="col">Partial</th>
+<th scope="col">Precision</th>
+<th scope="col">Recall</th>
+<th scope="col" class="primary">F1</th>
+<th scope="col">Gated consistency</th>
+</tr></thead><tbody>
+<tr class="fam-start">
+<th scope="rowgroup" rowspan="7" class="fam">Qwen3-VL</th>
+<th scope="row" class="model">4B-Inst</th>
+<td class="num primary">37.2<span class="ci">&plusmn;1.1</span></td>
+<td class="num primary">2.0<span class="ci">&plusmn;0.3</span></td>
+<td class="num">66.0<span class="ci">&plusmn;0.9</span></td>
+<td class="num">51.9<span class="ci">&plusmn;0.8</span></td>
+<td class="num">29.1<span class="ci">&plusmn;0.6</span></td>
+<td class="num primary">31.9<span class="ci">&plusmn;0.5</span></td>
+<td class="num">14.3<span class="ci">&plusmn;4.9</span></td>
+</tr>
+<tr>
+<th scope="row" class="model">8B-Inst</th>
+<td class="num primary">36.6<span class="ci">&plusmn;1.1</span></td>
+<td class="num primary">1.9<span class="ci">&plusmn;0.3</span></td>
+<td class="num">64.1<span class="ci">&plusmn;0.9</span></td>
+<td class="num">52.3<span class="ci">&plusmn;0.8</span></td>
+<td class="num">26.0<span class="ci">&plusmn;0.6</span></td>
+<td class="num primary">30.0<span class="ci">&plusmn;0.5</span></td>
+<td class="num">17.2<span class="ci">&plusmn;5.4</span></td>
+</tr>
+<tr>
+<th scope="row" class="model">30B-A3B-Inst</th>
+<td class="num primary">35.4<span class="ci">&plusmn;1.1</span></td>
+<td class="num primary">7.6<span class="ci">&plusmn;0.5</span></td>
+<td class="num">80.4<span class="ci">&plusmn;0.7</span></td>
+<td class="num">48.8<span class="ci">&plusmn;0.6</span></td>
+<td class="num">69.7<span class="ci">&plusmn;0.7</span></td>
+<td class="num primary">51.2<span class="ci">&plusmn;0.6</span></td>
+<td class="num">70.1<span class="ci">&plusmn;3.5</span></td>
+</tr>
+<tr>
+<th scope="row" class="model">235B-A22B-Inst</th>
+<td class="num primary best">39.7<span class="ci">&plusmn;1.1</span></td>
+<td class="num primary">3.1<span class="ci">&plusmn;0.4</span></td>
+<td class="num">57.1<span class="ci">&plusmn;0.8</span></td>
+<td class="num">49.8<span class="ci">&plusmn;0.7</span></td>
+<td class="num">21.4<span class="ci">&plusmn;0.8</span></td>
+<td class="num primary">25.9<span class="ci">&plusmn;0.5</span></td>
+<td class="num">30.8<span class="ci">&plusmn;3.4</span></td>
+</tr>
+<tr>
+<th scope="row" class="model">4B-Think</th>
+<td class="num primary">25.4<span class="ci">&plusmn;0.5</span></td>
+<td class="num primary">7.5<span class="ci">&plusmn;0.6</span></td>
+<td class="num">78.3<span class="ci">&plusmn;0.9</span></td>
+<td class="num">48.1<span class="ci">&plusmn;0.9</span></td>
+<td class="num">67.2<span class="ci">&plusmn;0.9</span></td>
+<td class="num primary">49.3<span class="ci">&plusmn;0.7</span></td>
+<td class="num">65.8<span class="ci">&plusmn;4.2</span></td>
+</tr>
+<tr>
+<th scope="row" class="model">8B-Think</th>
+<td class="num primary">24.5<span class="ci">&plusmn;0.5</span></td>
+<td class="num primary">7.7<span class="ci">&plusmn;0.5</span></td>
+<td class="num">75.4<span class="ci">&plusmn;0.7</span></td>
+<td class="num">47.1<span class="ci">&plusmn;0.6</span></td>
+<td class="num">61.8<span class="ci">&plusmn;0.8</span></td>
+<td class="num primary">47.0<span class="ci">&plusmn;0.6</span></td>
+<td class="num">57.9<span class="ci">&plusmn;3.8</span></td>
+</tr>
+<tr>
+<th scope="row" class="model">30B-A3B-Think</th>
+<td class="num primary">22.6<span class="ci">&plusmn;0.4</span></td>
+<td class="num primary">2.7<span class="ci">&plusmn;0.4</span></td>
+<td class="num">62.9<span class="ci">&plusmn;1.0</span></td>
+<td class="num">50.4<span class="ci">&plusmn;0.9</span></td>
+<td class="num">29.0<span class="ci">&plusmn;0.8</span></td>
+<td class="num primary">29.7<span class="ci">&plusmn;0.7</span></td>
+<td class="num">19.5<span class="ci">&plusmn;5.3</span></td>
+</tr>
+<tr class="fam-start">
+<th scope="rowgroup" rowspan="3" class="fam">Gemma-3</th>
+<th scope="row" class="model">4B</th>
+<td class="num primary">16.3<span class="ci">&plusmn;0.9</span></td>
+<td class="num primary">0.7<span class="ci">&plusmn;0.1</span></td>
+<td class="num">57.2<span class="ci">&plusmn;0.8</span></td>
+<td class="num">47.7<span class="ci">&plusmn;0.8</span></td>
+<td class="num">16.9<span class="ci">&plusmn;0.3</span></td>
+<td class="num primary">22.9<span class="ci">&plusmn;0.4</span></td>
+<td class="num">25.7<span class="ci">&plusmn;9.3</span></td>
+</tr>
+<tr>
+<th scope="row" class="model">12B</th>
+<td class="num primary">11.6<span class="ci">&plusmn;0.8</span></td>
+<td class="num primary">1.0<span class="ci">&plusmn;0.2</span></td>
+<td class="num">57.4<span class="ci">&plusmn;0.9</span></td>
+<td class="num">48.2<span class="ci">&plusmn;0.8</span></td>
+<td class="num">17.7<span class="ci">&plusmn;0.4</span></td>
+<td class="num primary">23.4<span class="ci">&plusmn;0.4</span></td>
+<td class="num">19.9<span class="ci">&plusmn;7.1</span></td>
+</tr>
+<tr>
+<th scope="row" class="model">27B</th>
+<td class="num primary">10.5<span class="ci">&plusmn;0.7</span></td>
+<td class="num primary">0.9<span class="ci">&plusmn;0.2</span></td>
+<td class="num">56.0<span class="ci">&plusmn;0.9</span></td>
+<td class="num">49.0<span class="ci">&plusmn;0.9</span></td>
+<td class="num">15.8<span class="ci">&plusmn;0.4</span></td>
+<td class="num primary">21.9<span class="ci">&plusmn;0.5</span></td>
+<td class="num">36.5<span class="ci">&plusmn;11.2</span></td>
+</tr>
+<tr class="fam-start">
+<th scope="rowgroup" rowspan="3" class="fam">DeepSeek-VL2</th>
+<th scope="row" class="model">Tiny</th>
+<td class="num primary">3.0<span class="ci">&plusmn;1.1</span></td>
+<td class="num primary best">10.2<span class="ci">&plusmn;1.9</span></td>
+<td class="num">84.5<span class="ci">&plusmn;2.2</span></td>
+<td class="num">49.6<span class="ci">&plusmn;2.1</span></td>
+<td class="num">81.3<span class="ci">&plusmn;2.3</span></td>
+<td class="num primary best">57.5<span class="ci">&plusmn;2.1</span></td>
+<td class="num">87.0<span class="ci">&plusmn;7.2</span></td>
+</tr>
+<tr>
+<th scope="row" class="model">Small</th>
+<td class="num primary">30.6<span class="ci">&plusmn;3.0</span></td>
+<td class="num primary">5.8<span class="ci">&plusmn;1.5</span></td>
+<td class="num">70.3<span class="ci">&plusmn;2.8</span></td>
+<td class="num">58.3<span class="ci">&plusmn;2.7</span></td>
+<td class="num">40.5<span class="ci">&plusmn;2.1</span></td>
+<td class="num primary">43.8<span class="ci">&plusmn;2.1</span></td>
+<td class="num">50.6<span class="ci">&plusmn;13.7</span></td>
+</tr>
+<tr>
+<th scope="row" class="model">27B-MoE</th>
+<td class="num primary">37.3<span class="ci">&plusmn;5.5</span></td>
+<td class="num primary">8.7<span class="ci">&plusmn;3.2</span></td>
+<td class="num">69.3<span class="ci">&plusmn;5.2</span></td>
+<td class="num">55.6<span class="ci">&plusmn;4.9</span></td>
+<td class="num">44.8<span class="ci">&plusmn;4.6</span></td>
+<td class="num primary">42.6<span class="ci">&plusmn;4.0</span></td>
+<td class="num">48.8<span class="ci">&plusmn;18.0</span></td>
+</tr>
+<tr class="fam-start">
+<th scope="rowgroup" rowspan="6" class="fam">Ministral-3</th>
+<th scope="row" class="model">3B-Inst</th>
+<td class="num primary">10.0<span class="ci">&plusmn;0.3</span></td>
+<td class="num primary">2.8<span class="ci">&plusmn;0.4</span></td>
+<td class="num">50.4<span class="ci">&plusmn;1.1</span></td>
+<td class="num">44.6<span class="ci">&plusmn;1.0</span></td>
+<td class="num">16.1<span class="ci">&plusmn;0.5</span></td>
+<td class="num primary">21.3<span class="ci">&plusmn;0.6</span></td>
+<td class="num">18.5<span class="ci">&plusmn;5.0</span></td>
+</tr>
+<tr>
+<th scope="row" class="model">8B-Inst</th>
+<td class="num primary">18.0<span class="ci">&plusmn;0.9</span></td>
+<td class="num primary">1.0<span class="ci">&plusmn;0.2</span></td>
+<td class="num">54.7<span class="ci">&plusmn;0.9</span></td>
+<td class="num">49.3<span class="ci">&plusmn;0.8</span></td>
+<td class="num">15.6<span class="ci">&plusmn;0.4</span></td>
+<td class="num primary">21.6<span class="ci">&plusmn;0.4</span></td>
+<td class="num">13.3<span class="ci">&plusmn;7.6</span></td>
+</tr>
+<tr>
+<th scope="row" class="model">14B-Inst</th>
+<td class="num primary">17.5<span class="ci">&plusmn;0.9</span></td>
+<td class="num primary">1.1<span class="ci">&plusmn;0.2</span></td>
+<td class="num">55.5<span class="ci">&plusmn;0.9</span></td>
+<td class="num">49.4<span class="ci">&plusmn;0.8</span></td>
+<td class="num">15.9<span class="ci">&plusmn;0.4</span></td>
+<td class="num primary">21.9<span class="ci">&plusmn;0.4</span></td>
+<td class="num">14.4<span class="ci">&plusmn;7.0</span></td>
+</tr>
+<tr>
+<th scope="row" class="model">3B-Reason</th>
+<td class="num primary">17.6<span class="ci">&plusmn;0.9</span></td>
+<td class="num primary">0.6<span class="ci">&plusmn;0.2</span></td>
+<td class="num">64.1<span class="ci">&plusmn;0.9</span></td>
+<td class="num">47.8<span class="ci">&plusmn;0.8</span></td>
+<td class="num">22.8<span class="ci">&plusmn;0.5</span></td>
+<td class="num primary">28.2<span class="ci">&plusmn;0.5</span></td>
+<td class="num">64.6<span class="ci">&plusmn;12.5</span></td>
+</tr>
+<tr>
+<th scope="row" class="model">8B-Reason</th>
+<td class="num primary">17.9<span class="ci">&plusmn;0.9</span></td>
+<td class="num primary">0.4<span class="ci">&plusmn;0.2</span></td>
+<td class="num">64.9<span class="ci">&plusmn;0.9</span></td>
+<td class="num">48.2<span class="ci">&plusmn;0.8</span></td>
+<td class="num">24.5<span class="ci">&plusmn;0.5</span></td>
+<td class="num primary">29.5<span class="ci">&plusmn;0.4</span></td>
+<td class="num">42.3<span class="ci">&plusmn;15.7</span></td>
+</tr>
+<tr>
+<th scope="row" class="model">14B-Reason</th>
+<td class="num primary">15.6<span class="ci">&plusmn;0.9</span></td>
+<td class="num primary">1.1<span class="ci">&plusmn;0.2</span></td>
+<td class="num">70.4<span class="ci">&plusmn;0.8</span></td>
+<td class="num">48.8<span class="ci">&plusmn;0.7</span></td>
+<td class="num">34.8<span class="ci">&plusmn;0.6</span></td>
+<td class="num primary">35.8<span class="ci">&plusmn;0.5</span></td>
+<td class="num">13.4<span class="ci">&plusmn;6.6</span></td>
+</tr>
+<tr class="fam-start">
+<th scope="rowgroup" rowspan="1" class="fam">OpenAI</th>
+<th scope="row" class="model">GPT-5</th>
+<td class="num primary">32.5<span class="ci">&plusmn;0.8</span></td>
+<td class="num primary">2.9<span class="ci">&plusmn;0.3</span></td>
+<td class="num">57.6<span class="ci">&plusmn;0.9</span></td>
+<td class="num">53.3<span class="ci">&plusmn;0.9</span></td>
+<td class="num">18.9<span class="ci">&plusmn;0.5</span></td>
+<td class="num primary">24.8<span class="ci">&plusmn;0.6</span></td>
+<td class="num">17.7<span class="ci">&plusmn;4.7</span></td>
+</tr>
+<tr class="fam-start">
+<th scope="rowgroup" rowspan="1" class="fam">Gemini</th>
+<th scope="row" class="model">Gemini-2.5</th>
+<td class="num primary">34.7<span class="ci">&plusmn;0.5</span></td>
+<td class="num primary">3.5<span class="ci">&plusmn;0.3</span></td>
+<td class="num">63.5<span class="ci">&plusmn;0.9</span></td>
+<td class="num">48.2<span class="ci">&plusmn;0.8</span></td>
+<td class="num">27.0<span class="ci">&plusmn;0.6</span></td>
+<td class="num primary">30.4<span class="ci">&plusmn;0.5</span></td>
+<td class="num">31.9<span class="ci">&plusmn;4.8</span></td>
+</tr>
+<tr class="fam-start human">
+<th scope="rowgroup" rowspan="1" class="fam">Human reference</th>
+<th scope="row" class="model">5 raters</th>
+<td class="num primary">56.0<span class="ci">&plusmn;13.0</span></td>
+<td class="num primary">12.0<span class="ci">&plusmn;9.0</span></td>
+<td class="num">68.0<span class="ci">&plusmn;13.0</span></td>
+<td class="na">&ndash;</td>
+<td class="na">&ndash;</td>
+<td class="num primary">57.9<span class="ci">&plusmn;3.4</span></td>
+<td class="na">&ndash;</td>
+</tr>
+</tbody></table></div>
+        </div>
+        <p class="table-note">Highlighted columns are the primary scores. Values are copied from the submitted manuscript (Tables 1 and 2). Scroll horizontally on small screens.</p>
+
+        <figure class="paper-figure" style="margin-top: 34px;">
+          <a class="zoom" href="assets/figures/failure_case.jpg"><img src="assets/figures/failure_case.jpg" width="2611" height="964" loading="lazy" alt="Three failure examples with predictions from six model families. Top left: a Presence item whose ground truth is b (prosthetic limb only); GPT-5, Gemini-2.5, Qwen3-VL, and Gemma-3 answer c, while DeepSeek-VL2 and Ministral-3 answer b. Bottom left: a Presence item whose ground truth is a (residual limb only); GPT-5, Gemini-2.5, Qwen3-VL, and Ministral-3 answer d, while DeepSeek-VL2 and Gemma-3 answer a. Right: a Category item whose ground truth is d (lower leg); models answer b, a, a, b, a, and c, so every displayed prediction is incorrect."></a>
+          <figcaption><b>Figure 4. Model errors in InclusiveVLM-LimbEvidence.</b> The two left examples show unsupported residual-limb evidence and missed residual-limb evidence in LimbEvidence-Presence. The right example shows incorrect Category matching in LimbEvidence-Compatibility. Targets and recorded model selections are shown for each case. In this figure, red boxes mark correct selections and green boxes mark errors.</figcaption>
+        </figure>
+      </div>
+    </section>
+
+    <section id="findings">
+      <div class="shell">
+        <div class="section-head">
+          <div><span class="eyebrow">What the experiments show</span><h2>Three recurring failure modes</h2></div>
+          <p class="section-note">Diagnostics below use Qwen3-VL-235B-A22B-Instruct, the largest open-weight model evaluated, unless noted otherwise.</p>
+        </div>
+        <div class="findings">
+          <article class="finding">
+            <div>
+              <span class="tag" style="background:var(--soft-green);color:var(--green)">Detection &ne; attribution</span>
+              <h3>Models detect the evidence type but misplace it on the body</h3>
+              <p>In Attribution responses, the evidence type is correct on 74.40% of prompts, but body region and side are correct on only about 40%. The complete target is correct on 17.10%.</p>
+              <p>Separately correcting body region or side with the target raises set mIoU by 16.32 or 21.41 points. These are target-assisted gains, not a trained remedy.</p>
             </div>
+            <div class="bars" aria-label="Attribution component correctness for Qwen3-VL-235B">
+              <div class="bars-title">Component correctness (%)</div>
+              <div class="bar-row"><span class="name">Evidence type</span><div class="bar-track"><div class="bar-fill" style="width:74.40%;background:var(--green)"></div></div><span class="v">74.40</span></div>
+              <div class="bar-row"><span class="name">Side</span><div class="bar-track"><div class="bar-fill" style="width:40.59%;background:var(--amber)"></div></div><span class="v">40.59</span></div>
+              <div class="bar-row"><span class="name">Body region</span><div class="bar-track"><div class="bar-fill" style="width:40.11%;background:var(--amber)"></div></div><span class="v">40.11</span></div>
+              <div class="bar-row"><span class="name">Complete target</span><div class="bar-track"><div class="bar-fill" style="width:17.10%;background:var(--red)"></div></div><span class="v">17.10</span></div>
+            </div>
+          </article>
+
+          <article class="finding">
+            <div>
+              <span class="tag" style="background:var(--soft-amber);color:var(--amber)">Partial &ne; complete</span>
+              <h3>Partial matches fall short of complete set recovery</h3>
+              <p>Low Exact is not confined to one model family. Precision and recall show different failures. DeepSeek-VL2-Tiny covers most targets but adds distractors (81.3 recall, 49.6 precision). GPT-5 misses most targets (18.9 recall, 53.3 precision).</p>
+              <p>The 235B model selects 1.63 options on average against a target average of 3.83. Yet it selects an option on 90.44% of instances where no option matches.</p>
+            </div>
+            <table class="mini">
+              <thead><tr><th>Model</th><th>Partial</th><th>Exact</th><th>Prec.</th><th>Recall</th></tr></thead>
+              <tbody>
+                <tr><td>Qwen3-VL-30B-A3B-Inst</td><td>80.4</td><td>7.6</td><td>48.8</td><td>69.7</td></tr>
+                <tr><td>DeepSeek-VL2-Tiny</td><td>84.5</td><td>10.2</td><td>49.6</td><td>81.3</td></tr>
+                <tr><td>Gemini-2.5</td><td>63.5</td><td>3.5</td><td>48.2</td><td>27.0</td></tr>
+                <tr><td>GPT-5</td><td>57.6</td><td>2.9</td><td>53.3</td><td>18.9</td></tr>
+                <tr><td>Gemma-3-27B</td><td>56.0</td><td>0.9</td><td>49.0</td><td>15.8</td></tr>
+              </tbody>
+            </table>
+          </article>
+
+          <article class="finding">
+            <div>
+              <span class="tag" style="background:var(--soft-red);color:var(--red)">Consistent &ne; correct</span>
+              <h3>Stable answers can be stably wrong</h3>
+              <p>On Constrained Attribution, the 235B model has 75.43% raw paraphrase consistency but only 17.10% exact correctness. It gives the same incorrect answer throughout 47.28% of paraphrase groups.</p>
+              <p>Its correctness-gated consistency is 68.51%, but the gate keeps only 2,099 of 8,802 groups (23.85%). Consistency must be read together with correctness and coverage.</p>
+            </div>
+            <div class="bars" aria-label="Consistency versus correctness for Qwen3-VL-235B on Constrained Attribution">
+              <div class="bars-title">Constrained Attribution, 235B (%)</div>
+              <div class="bar-row"><span class="name">Raw consistency</span><div class="bar-track"><div class="bar-fill" style="width:75.43%;background:var(--blue)"></div></div><span class="v">75.43</span></div>
+              <div class="bar-row"><span class="name">Wrong &amp; stable</span><div class="bar-track"><div class="bar-fill" style="width:47.28%;background:var(--red)"></div></div><span class="v">47.28</span></div>
+              <div class="bar-row"><span class="name">Gated coverage</span><div class="bar-track"><div class="bar-fill" style="width:23.85%;background:var(--amber)"></div></div><span class="v">23.85</span></div>
+              <div class="bar-row"><span class="name">Exact correctness</span><div class="bar-track"><div class="bar-fill" style="width:17.10%;background:var(--green)"></div></div><span class="v">17.10</span></div>
+            </div>
+          </article>
+
+          <article class="finding">
+            <div>
+              <span class="tag" style="background:var(--soft-blue);color:var(--blue)">Scale is not a fix</span>
+              <h3>A much larger model improves detection, not attribution</h3>
+              <p>Moving from Qwen3-VL-30B-A3B to 235B-A22B raises Presence accuracy by more than 50 points. Attribution barely changes, and Diversity F1 falls.</p>
+              <p>These are comparisons of the evaluated checkpoints, not a scaling law. Thinking or Reasoning checkpoints and the medical-domain MedGemma control also fail to improve all primary scores (see Q15 and Q16).</p>
+            </div>
+            <table class="mini">
+              <thead><tr><th>Qwen3-VL Instruct</th><th>30B</th><th>235B</th><th>&Delta;</th></tr></thead>
+              <tbody>
+                <tr><td>Presence accuracy</td><td>23.9</td><td>74.23</td><td class="up">+50.33</td></tr>
+                <tr><td>Attribution set mIoU</td><td>24.0</td><td>24.76</td><td class="flat">+0.76</td></tr>
+                <tr><td>Category accuracy</td><td>35.4</td><td>39.70</td><td class="up">+4.30</td></tr>
+                <tr><td>Diversity Exact</td><td>7.6</td><td>3.07</td><td class="down">&minus;4.53</td></tr>
+                <tr><td>Diversity F1</td><td>51.2</td><td>25.90</td><td class="down">&minus;25.30</td></tr>
+              </tbody>
+            </table>
+          </article>
+        </div>
+      </div>
+    </section>
+
+    <section id="qa">
+      <div class="shell">
+        <div class="section-head">
+          <div><span class="eyebrow">For reviewers</span><h2>Questions about InclusiveVLM-LimbEvidence</h2></div>
+          <p class="section-note">This Q&amp;A explains the design, results, and intended use of the benchmark. Each answer points to the relevant sections, tables, and appendices of the manuscript.</p>
+        </div>
+        <div class="qa-toolbar">
+          <div class="left">
+            <button type="button" id="qa-expand">Expand all</button>
+            <button type="button" id="qa-collapse">Collapse all</button>
+            <input type="search" id="qa-search" placeholder="Filter questions (e.g. FreeForm, scale)" aria-label="Filter questions">
+          </div>
+          <span class="plain">Plain-text version: <a href="https://github.com/Anonymous-Accept/InclusiveVLM-LimbEvidence/blob/main/benchmark_qa.md">benchmark_qa.md</a></span>
+        </div>
+        <div class="qa-layout">
+          <nav class="qa-index" aria-label="Q&amp;A topics">
+            <b>Topics</b>
+            <a href="#qa-group-1">Purpose and evaluation design</a>
+            <a href="#qa-group-2">Matching relations and human reference</a>
+            <a href="#qa-group-3">What the experiments establish</a>
+            <a href="#qa-group-4">Access and use</a>
+            <a href="#qa-group-5">About this Q&amp;A</a>
+          </nav>
+          <div id="qa-list">
+<div class="qa-group" id="qa-group-1"><h3 class="qa-group-title"><span class="qa-group-count">6</span>Purpose and evaluation design</h3>
+<details class="qa" id="q1"><summary><span class="qa-num">Q1</span><span class="qa-q">What is the main contribution of InclusiveVLM-LimbEvidence?</span><span class="qa-chev" aria-hidden="true"></span></summary><div class="qa-a"><p>InclusiveVLM-LimbEvidence makes specific visual errors measurable for individuals with limb deficiencies. It combines new evidence annotations with separate evaluations of detection, body-region attribution, and compatibility-style structured decisions. The main tables cover 21 model variants from six general-purpose vision-language model (VLM) families. The highest model Constrained Attribution score is 29.4% set mIoU, a label-overlap measure, compared with a human reference of 83.4%. Low complete-set recovery also appears across families. Paired output formats, inference-style comparisons, a medical-domain control, and component diagnostics help explain these results. This connects population coverage to concrete questions in visual grounding, spatial assignment, and set prediction, giving researchers defined targets for improving visual AI for individuals with limb deficiencies.</p><p class="qa-ref"><span>Paper</span>Sections 1 and 4, Tables 1, 2, 4, 5, and 6, Appendix D.1.</p></div></details>
+<details class="qa" id="q2"><summary><span class="qa-num">Q2</span><span class="qa-q">How does this resource differ from LDPose and other inclusive vision benchmarks?</span><span class="qa-chev" aria-hidden="true"></span></summary><div class="qa-a"><p>We reuse LDPose images and add benchmark-specific masks for residual limbs and prosthetic devices, body-region labels, body-device records, prompts, and evaluation targets. LDPose primarily evaluates pose estimation, while ProGait supports video-based perception and gait analysis. Counterfactual depiction studies examine how model responses change between depictions. InclusiveVLM-LimbEvidence instead checks whether a language-based answer agrees with the visible limb evidence and target for the evaluated image. These resources address complementary questions about body representation, response variation, and image-specific correctness.</p><p class="qa-ref"><span>Paper</span>Section 2.1, Section 3.3, Appendices A.1 and A.2.</p></div></details>
+<details class="qa" id="q3"><summary><span class="qa-num">Q3</span><span class="qa-q">Why separate Presence, Attribution, and Compatibility?</span><span class="qa-chev" aria-hidden="true"></span></summary><div class="qa-a"><p>Each requirement asks for information that the preceding description alone cannot supply. LimbEvidence-Presence asks which evidence types are visible. Detecting a prosthetic device does not identify the body region or side to which it belongs, which motivates LimbEvidence-Attribution. Identifying that region still does not establish whether a model can match the visible configuration to candidate devices, which motivates LimbEvidence-Compatibility. Constrained and FreeForm are parallel Attribution formats. Category and Diversity are parallel Compatibility probes. The tasks are evaluated separately, so the progression describes additional requirements rather than a pipeline that passes one model answer into the next task.</p><p class="qa-ref"><span>Paper</span>Section 3.1, Figure 1, Appendix B.1.</p></div></details>
+<details class="qa" id="q4"><summary><span class="qa-num">Q4</span><span class="qa-q">Who defined the probes, and what professional input informed the annotations?</span><span class="qa-chev" aria-hidden="true"></span></summary><div class="qa-a"><p>The authors defined the probes from observed errors in VLM prototypes for preparing visual evidence in Paralympic athlete classification workflows. The evaluation targets were fixed before the new annotations were created. An International Paralympic Committee certified classifier supported annotation guidance and case adjudication. This contribution concerns the interpretation of visual evidence within the annotation process. Probe selection remained an author responsibility. The project did not conduct formal participatory co-design, and the manuscript distinguishes these roles rather than describing the benchmark as a complete clinical capability taxonomy.</p><p class="qa-ref"><span>Paper</span>Section 3.1, Section 3.3, Appendices B.1 and B.4.</p></div></details>
+<details class="qa" id="q5"><summary><span class="qa-num">Q5</span><span class="qa-q">What do limb evidence and Attribution mean here?</span><span class="qa-chev" aria-hidden="true"></span></summary><div class="qa-a"><p>Limb evidence means visible residual-limb or prosthetic-device regions and their annotated relation to the body. Attribution assigns each evidence type to a body region and side, such as left-thigh prosthetic-device evidence. The vocabulary covers upper arm, forearm, thigh, and calf on each side, crossed with the two evidence types. Left and right refer to the depicted individual. Residual-limb and prosthetic-device masks can occupy different pixels within the same segment. Models predict labels rather than mask coordinates. Unseen anatomy and intact-limb labels are outside the annotation target.</p><p class="qa-ref"><span>Paper</span>Section 3.3, Appendices B.3 and B.5.</p></div></details>
+<details class="qa" id="q6"><summary><span class="qa-num">Q6</span><span class="qa-q">What do the dataset counts represent?</span><span class="qa-chev" aria-hidden="true"></span></summary><div class="qa-a"><p>The benchmark contains 16,850 source images. Presence and Constrained Attribution each contain 26,406 prompts over 8,802 images, giving 52,812 direct evidence queries. Category contains 8,048 instances and Diversity contains 12,616 instances over 8,048 images, giving 20,664 Compatibility instances. FreeForm is a separate diagnostic on 500 paired image-target items. These are counts of images and evaluation records, not distinct people. Filtering removes near-duplicates, but image counts do not establish person-disjoint evaluation or demographic representativeness. The results describe the evaluated open-world image collection.</p><p class="qa-ref"><span>Paper</span>Section 3.2, Table 3, Appendices B.2 and D.3.</p></div></details>
+</div>
+<div class="qa-group" id="qa-group-2"><h3 class="qa-group-title"><span class="qa-group-count">6</span>Matching relations and human reference</h3>
+<details class="qa" id="q7"><summary><span class="qa-num">Q7</span><span class="qa-q">What determines whether a candidate is compatible?</span><span class="qa-chev" aria-hidden="true"></span></summary><div class="qa-a"><p>Compatibility follows a fixed correspondence between the body-part categories annotated for the image and those represented by the candidate devices. For example, an upper-limb device is excluded when the image has only lower-limb target categories. Different device appearances can satisfy the same body-part relation. The visual task is to identify the relevant categories in the image and candidates, then apply that relation. Accepted categories and option sets are recorded and reviewed during annotation. This is structured visual matching, not a decision about which device should be prescribed to an individual.</p><p class="qa-ref"><span>Paper</span>Section 3.4, Appendices B.6 and D.4.</p></div></details>
+<details class="qa" id="q8"><summary><span class="qa-num">Q8</span><span class="qa-q">How do Category and Diversity handle multiple matching answers?</span><span class="qa-chev" aria-hidden="true"></span></summary><div class="qa-a"><p>Category asks for one category. A prediction is correct when it belongs to the accepted category set, even when several categories are acceptable. Diversity asks for the complete matching option set, which can be empty. Its primary F1 describes set overlap, while Exact requires every target and no distractors. Partial records at least one target hit. These probes use separate grids and evaluate different output requirements. Diversity refers to variation in candidate appearance, not demographic diversity or a later step that receives the Category prediction.</p><p class="qa-ref"><span>Paper</span>Section 3.4, Figure 2, Appendix B.6.</p></div></details>
+<details class="qa" id="q9"><summary><span class="qa-num">Q9</span><span class="qa-q">How are the reference annotations established and reviewed?</span><span class="qa-chev" aria-hidden="true"></span></summary><div class="qa-a"><p>Annotators use visual guidelines for residual-limb evidence, prosthetic-device appearance, and body regions. A second annotator reviews each mask and derived label set, including accepted categories and matching option sets. Disagreements above the annotation tolerance lead to re-annotation and adjudication. A certified classifier supports guidance and case adjudication, and periodic spot audits inspect randomly sampled batches. The reviewed masks, labels, and option sets form the reference targets used for model evaluation and human scoring. This makes the connection between the image annotation and the scored answer explicit.</p><p class="qa-ref"><span>Paper</span>Section 3.3, Figure 3, Appendix B.4.</p></div></details>
+<details class="qa" id="q10"><summary><span class="qa-num">Q10</span><span class="qa-q">How should the human reference results be read across tasks?</span><span class="qa-chev" aria-hidden="true"></span></summary><div class="qa-a"><p>The human results describe performance under different response requirements. Raters reach 98.0% Presence accuracy and 83.4% Constrained Attribution mean set intersection over union (set mIoU). For Diversity, the overall F1 is 57.9%, while Exact is 12.0%. Exact gives no partial credit when a required option is omitted or a distractor is added. It therefore measures a different requirement from recovering much of the target set. The human reference provides task-specific comparisons against reviewed targets. The background-specific results below add context that the overall average alone does not show.</p><p class="qa-ref"><span>Paper</span>Tables 1, 2, and 4(a), Appendix C.3.</p></div></details>
+<details class="qa" id="q11"><summary><span class="qa-num">Q11</span><span class="qa-q">Why report participant background rather than only an overall human average?</span><span class="qa-chev" aria-hidden="true"></span></summary><div class="qa-a"><p>The two participants with extensive disability-research experience achieve Diversity F1 scores of 77.78% and 70.67%. Their mean is 74.22%, compared with 47.03% for the participants with primarily computer-science backgrounds. The ratio is 1.58, with a 95% interval of [1.16, 2.22]. An analogy is bird identification, where people with different experience can perform differently under the same answer rules. A mean below the maximum does not by itself identify a problem with those rules. The ratio compares performance, not inter-rater agreement. The comparison is descriptive because assignments were not identical across participants. It is not a causal estimate of experience or a clinical performance ceiling.</p><p class="qa-ref"><span>Paper</span>Table 4(a), Appendix C.3.</p></div></details>
+<details class="qa" id="q12"><summary><span class="qa-num">Q12</span><span class="qa-q">How should the reported metrics and confidence intervals be interpreted?</span><span class="qa-chev" aria-hidden="true"></span></summary><div class="qa-a"><p>Different metrics expose different errors. GPT-5 reaches 77.2% Presence accuracy but 50.0% macro-F1, while Gemini-2.5 reaches 47.0% and 35.3%, respectively. Accuracy weights examples equally, whereas macro-F1 weights the evaluated labels equally. For set outputs, Exact requires complete agreement, while set mIoU and F1 describe overlap. Sample-average and micro-F1 also use different aggregation rules. The tables report 95% confidence intervals where available, with the resampling units specified per evaluation in Appendix C.2. These distinctions help readers assess category imbalance, missed targets, and incorrect inclusions without treating one metric as a complete account of performance.</p><p class="qa-ref"><span>Paper</span>Tables 1 and 2, Appendix C.2.</p></div></details>
+</div>
+<div class="qa-group" id="qa-group-3"><h3 class="qa-group-title"><span class="qa-group-count">11</span>What the experiments establish</h3>
+<details class="qa" id="q13"><summary><span class="qa-num">Q13</span><span class="qa-q">How do the analyses distinguish the demands contributing to model performance?</span><span class="qa-chev" aria-hidden="true"></span></summary><div class="qa-a"><p>The evidence comes from several complementary comparisons, not one model. The main tables compare six VLM families. The paired Attribution study holds images and targets fixed while changing the output format. Six within-family inference-style pairs and the matched MedGemma comparison examine checkpoint style and specialization. Figure 4 shows both correct and incorrect Presence answers across families, plus a Category example where every displayed prediction is incorrect. The component analysis provides a focused view of spatial assignment. These analyses support task-level conclusions about observable model outputs without attributing every error to one mechanism. They make the findings relevant to model evaluation while keeping the role of vocabulary, format, and familiarity explicit.</p><p class="qa-ref"><span>Paper</span>Tables 1, 2, 4(b), 5, and 6(c), Figure 4, Appendices C.4 through C.7 and D.2.</p></div></details>
+<details class="qa" id="q14"><summary><span class="qa-num">Q14</span><span class="qa-q">Does a much larger model resolve the observed failures?</span><span class="qa-chev" aria-hidden="true"></span></summary><div class="qa-a"><p>Not uniformly. Moving from Qwen3-VL-30B-A3B-Instruct to 235B-A22B-Instruct raises Presence accuracy from 23.9% to 74.23%, but Constrained Attribution set mIoU changes only from 24.0% to 24.76%. Diversity F1 falls from 51.2% to 25.90%. A task-dependent pattern also appears within Gemma-3. Its reported Constrained Attribution set mIoU rises from 20.5% at 4B to 27.8% at 27B, while Category accuracy falls from 16.3% to 10.5%. Larger checkpoints can improve some requirements without improving others. These are comparisons of the evaluated checkpoints and settings, not a controlled estimate of parameter count alone or a general scaling law.</p><p class="qa-ref"><span>Paper</span>Section 4.1, Tables 1, 2, and 5(a), Appendix C.4.</p></div></details>
+<details class="qa" id="q15"><summary><span class="qa-num">Q15</span><span class="qa-q">Why include Thinking and Reasoning checkpoints for visual tasks?</span><span class="qa-chev" aria-hidden="true"></span></summary><div class="qa-a"><p>They test whether the findings depend on the evaluated inference style. Across six same-family, same-scale pairs, no Thinking or Reasoning checkpoint improves all four primary probe scores. Qwen3-VL-4B-Thinking improves Diversity F1 by 17.4 percentage points while reducing Category accuracy by 11.8 points. For Ministral-3, Reasoning increases Diversity F1 by 6.9, 7.9, and 13.9 points at 3B, 8B, and 14B, respectively, but Exact decreases or remains unchanged at the reported precision. Including these results makes the trade-offs visible instead of assuming that reasoning either always helps or never helps. The comparisons concern existing checkpoints, not an isolated intervention on reasoning.</p><p class="qa-ref"><span>Paper</span>Table 5(b), Appendix C.4.</p></div></details>
+<details class="qa" id="q16"><summary><span class="qa-num">Q16</span><span class="qa-q">Does medical-domain specialization improve these results?</span><span class="qa-chev" aria-hidden="true"></span></summary><div class="qa-a"><p>The matched MedGemma 1.5 4B comparison does not show improvements on the three reported Presence, Attribution, and Diversity primary scores. Relative to Gemma-3 4B, the differences are -7.87 points in Presence accuracy, -12.31 in Attribution set mIoU, and -4.56 in Diversity F1. The Category difference has magnitude 1.12 points, with a paired interval that includes zero. Medical-domain specialization is therefore not sufficient for better performance in this comparison. The conclusion concerns the evaluated model and open-world limb evidence, not all medical VLMs or clinical capabilities.</p><p class="qa-ref"><span>Paper</span>Table 5(c), Appendix C.4.</p></div></details>
+<details class="qa" id="q17"><summary><span class="qa-num">Q17</span><span class="qa-q">Why does FreeForm use 500 paired items, and what does the comparison show?</span><span class="qa-chev" aria-hidden="true"></span></summary><div class="qa-a"><p>FreeForm is an output-format diagnostic for an attribution target already evaluated at full scale in Constrained form. We randomly sampled 500 image-target pairs and held both the image and target fixed within each paired comparison. On this subset, Qwen3-VL-4B-Thinking changes from 17.22% Constrained set mIoU to 43.1% FreeForm set mIoU. The corresponding 8B values are 15.87% and 44.7%, while GPT-5 changes from 26.51% to 30.5%. Output format clearly affects measured performance. The comparison is not an assessment of unrestricted description quality, and its Constrained scores should not be replaced with the full-pool scores.</p><p class="qa-ref"><span>Paper</span>Section 4.1, Table 4(b), Appendices B.5 and C.5.</p></div></details>
+<details class="qa" id="q18"><summary><span class="qa-num">Q18</span><span class="qa-q">What does FreeForm parsing coverage establish?</span><span class="qa-chev" aria-hidden="true"></span></summary><div class="qa-a"><p>Parsing coverage measures whether a deterministic parser can recover a canonical label set, not whether that set is correct. In the paired diagnostic, coverage is 93.4% for Qwen3-VL-4B-Thinking, 90.4% for 8B-Thinking, and 83.4% for GPT-5. The remaining outputs are invalid under the parser. Attribution is then evaluated against the benchmark targets. Reporting coverage alongside set mIoU helps distinguish recoverable output structure from correct evidence assignment. The observed format differences include the effects of generation and deterministic normalization, rather than showing that the output interface is irrelevant.</p><p class="qa-ref"><span>Paper</span>Table 4(b), Appendix C.5.</p></div></details>
+<details class="qa" id="q19"><summary><span class="qa-num">Q19</span><span class="qa-q">What does low exact-set accuracy reveal beyond task difficulty?</span><span class="qa-chev" aria-hidden="true"></span></summary><div class="qa-a"><p>Low Exact is not confined to one model family. Qwen3-VL-30B-A3B-Instruct reaches 80.4% Partial but 7.6% Exact. Gemma-3-27B reaches 56.0% and 0.9%, and Gemini-2.5 reaches 63.5% and 3.5%, respectively. Precision and recall reveal different error profiles. DeepSeek-VL2-Tiny combines 81.3% recall with 49.6% precision, while GPT-5 has 18.9% recall and 53.3% precision. High target coverage with incorrect inclusions and low target coverage are different failures, even when both produce low Exact. Table 7 further separates missed targets, extra options, and no-match errors in its detailed case analysis. This makes set prediction more informative than a single count of imperfect answers.</p><p class="qa-ref"><span>Paper</span>Section 4.2, Tables 2 and 7, Appendix C.7.</p></div></details>
+<details class="qa" id="q20"><summary><span class="qa-num">Q20</span><span class="qa-q">How are simple image-independent response strategies used to interpret the scores?</span><span class="qa-chev" aria-hidden="true"></span></summary><div class="qa-a"><p>Appendix C.9 uses target counts to show what a response can achieve without inspecting the image. In the Presence pool analyzed there, always choosing the most frequent label yields 65.79% accuracy. In the corresponding 12,616-item Diversity pool, always returning an empty set yields 14.67% Exact, while selecting every option yields 85.33% Partial. These references show why a high Partial score or a nonzero Exact score alone need not demonstrate image-grounded matching. We therefore report overlap, selection size, and empty-target outcomes alongside Exact and Partial. The references are analytical calculations, not additional model runs, and comparisons require the same evaluation pool.</p><p class="qa-ref"><span>Paper</span>Appendix C.9, Tables 6(b) and 7.</p></div></details>
+<details class="qa" id="q21"><summary><span class="qa-num">Q21</span><span class="qa-q">What does paraphrase consistency add beyond correctness?</span><span class="qa-chev" aria-hidden="true"></span></summary><div class="qa-a"><p>Correctness checks agreement with the target, while consistency checks variation across equivalent wording. The main tables show why they are not interchangeable. Gemma-3-12B has 85.2% gated Presence consistency but 29.9% accuracy. DeepSeek-VL2-Tiny has 87.0% gated Diversity consistency but 10.2% Exact. Gated consistency applies only to groups with at least one correct response, so these values do not describe overall correctness. The separate raw-consistency analysis supplies direct evidence of repeated errors: Qwen3-VL-235B gives the same incorrect Attribution answer throughout 47.28% of paraphrase groups. We therefore interpret correctness, raw consistency, gated consistency, and retained coverage separately. A stable answer can be wrong, and high consistency on a retained subset is not a measure of success across all examples.</p><p class="qa-ref"><span>Paper</span>Tables 1, 2, and 6(e), Section 4.3, Appendix C.8.</p></div></details>
+<details class="qa" id="q22"><summary><span class="qa-num">Q22</span><span class="qa-q">How are no-match answers, insufficient information, and invalid outputs distinguished?</span><span class="qa-chev" aria-hidden="true"></span></summary><div class="qa-a"><p>A no-match target means none of the presented candidates satisfies the benchmark relation. An insufficient-information choice, where provided, is an explicit answer indicating inadequate visible evidence. An invalid output is one from which the parser cannot recover a valid canonical response. These outcomes have different meanings. Correctly returning an empty set does not by itself establish uncertainty-based abstention, and a parsing failure is not a successful decision to withhold an answer. Keeping the cases separate makes the selection errors and the scope of the reported behavior easier to interpret.</p><p class="qa-ref"><span>Paper</span>Appendix B.6, Appendix C.7.</p></div></details>
+<details class="qa" id="q23"><summary><span class="qa-num">Q23</span><span class="qa-q">How can a test-only benchmark guide future model development?</span><span class="qa-chev" aria-hidden="true"></span></summary><div class="qa-a"><p>The experiments identify several concrete development targets. Low Attribution scores across model families motivate better evidence-to-region assignment. Diversity precision and recall distinguish missed targets from incorrect inclusions, while the paired FreeForm results show why improvements should be checked across output formats. The 235B oracle analysis adds a focused diagnostic: correcting body region or side separately raises set mIoU by 16.32 or 21.41 percentage points. These are target-assisted gains, not results from a trained remedy. The exact pretraining corpora are unavailable, so the study does not estimate population-specific training prevalence. Future methods should use separate development data and test whether they address these observed errors on the fixed benchmark, rather than improve only coarse accuracy or response consistency.</p><p class="qa-ref"><span>Paper</span>Tables 1, 2, 4(b), and 6(c), Appendices B.7, C.6, D.2, and D.4.</p></div></details>
+</div>
+<div class="qa-group" id="qa-group-4"><h3 class="qa-group-title"><span class="qa-group-count">2</span>Access and use</h3>
+<details class="qa" id="q24"><summary><span class="qa-num">Q24</span><span class="qa-q">How will reproduction remain traceable when images, models, or device pools change?</span><span class="qa-chev" aria-hidden="true"></span></summary><div class="qa-a"><p>The release plan pairs benchmark annotations and task records with stable image identifiers, checksums, exact option grids, scoring code, and reconstruction instructions. Source-image access follows the permitted LDPose access route rather than relying only on changing web links. Recorded model identifiers and API snapshot dates will accompany closed-model results. Candidate-pool updates will use new versions and change logs, preserving the relationship between prior scores and their original targets. These plans distinguish reproducing target-based scoring from rerunning a provider service that may change. We will document the non-owner download and scoring check alongside the release.</p><p class="qa-ref"><span>Paper</span>Appendix C.1, Appendices E.2 and E.3.</p></div></details>
+<details class="qa" id="q25"><summary><span class="qa-num">Q25</span><span class="qa-q">What ethical safeguards govern the benchmark?</span><span class="qa-chev" aria-hidden="true"></span></summary><div class="qa-a"><p>The project received approval from an institutional Human Research Ethics Committee. Institution names and approval identifiers are omitted during anonymous review. Benchmark annotations, prompts, and derived metadata are designated for CC BY-NC-SA 4.0 release, while source photographs retain their own rights and access conditions. The access agreement restricts use to non-commercial research, requires secure storage, and prohibits re-identification and face recognition. Correction and removal procedures support affected individuals and rights holders. The resource evaluates model interpretation of visible evidence, not the abilities, identities, or lived experiences of the people depicted.</p><p class="qa-ref"><span>Paper</span>Ethics statement, Appendices E.1 and E.2, Datasheet.</p></div></details>
+</div>
+<div class="qa-group" id="qa-group-5"><h3 class="qa-group-title"><span class="qa-group-count">1</span>About this Q&amp;A</h3>
+<details class="qa" id="q26"><summary><span class="qa-num">Q26</span><span class="qa-q">Why include a Q&amp;A section on the project page?</span><span class="qa-chev" aria-hidden="true"></span></summary><div class="qa-a"><p>At some point, we noticed we were answering imaginary reviewers in the middle of the Introduction. That was not our best writing habit. So the paper now follows the research story, and this page takes the follow-up questions. You can open the ones you care about and skip the rest. And yes, we hope these answers help earn your support for the paper. We care about making individuals with limb deficiencies part of VLM evaluation, and we hope the benchmark and evidence make a convincing case. Thanks for reading this far.</p></div></details>
+</div>
+            <p class="qa-empty" id="qa-empty">No question matches this filter.</p>
           </div>
         </div>
       </div>
     </section>
 
-    <section id="code">
+    <section id="code" class="alt">
       <div class="shell">
         <div class="section-head">
-          <h2>Code In This Repository</h2>
-          <p class="section-note">The repository contains reviewer-facing code only. The full data are supplied separately through the review artifact channel.</p>
+          <div><span class="eyebrow">Code</span><h2>Code in this repository</h2></div>
+          <p class="section-note">The repository contains reviewer-facing code only. Benchmark data are supplied separately through the review artifact channel.</p>
         </div>
         <div class="code-grid">
-          <a class="code-link" href="https://github.com/Anonymous-Accept/InclusiveVLM-LEP/tree/main/scripts/inclusive_vlm_lep">
-            <strong>Benchmark Code</strong>
-            <span>scripts/inclusive_vlm_lep</span>
-          </a>
-          <a class="code-link" href="https://github.com/Anonymous-Accept/InclusiveVLM-LEP/tree/main/scripts/core">
-            <strong>Shared Runtime</strong>
-            <span>scripts/core</span>
-          </a>
-          <a class="code-link" href="https://github.com/Anonymous-Accept/InclusiveVLM-LEP/tree/main/configs/inclusive_vlm_lep">
-            <strong>Full-Dataset Configs</strong>
-            <span>configs/inclusive_vlm_lep</span>
-          </a>
-          <a class="code-link" href="https://github.com/Anonymous-Accept/InclusiveVLM-LEP/blob/main/REPRODUCE.md">
-            <strong>Reproduction Commands</strong>
-            <span>REPRODUCE.md</span>
-          </a>
+          <a class="code-link" href="https://github.com/Anonymous-Accept/InclusiveVLM-LimbEvidence/tree/main/scripts/inclusive_vlm_lep"><strong>Benchmark code</strong><span>scripts/inclusive_vlm_lep</span></a>
+          <a class="code-link" href="https://github.com/Anonymous-Accept/InclusiveVLM-LimbEvidence/tree/main/scripts/core"><strong>Shared runtime</strong><span>scripts/core</span></a>
+          <a class="code-link" href="https://github.com/Anonymous-Accept/InclusiveVLM-LimbEvidence/tree/main/configs/inclusive_vlm_lep"><strong>Full-dataset configs</strong><span>configs/inclusive_vlm_lep</span></a>
+          <a class="code-link" href="https://github.com/Anonymous-Accept/InclusiveVLM-LimbEvidence/blob/main/REPRODUCE.md"><strong>Reproduction commands</strong><span>REPRODUCE.md</span></a>
         </div>
+        <p class="table-note" style="margin-top:14px">Code paths keep the internal prefix <code>inclusive_vlm_lep</code>, which refers to the same benchmark.</p>
       </div>
     </section>
 
-    <section id="scope">
+    <section id="ethics">
       <div class="shell">
         <div class="section-head">
-          <h2>Scope Boundary</h2>
-          <p class="section-note">InclusiveVLM-LEP is not clinical or prosthetic recommendation tooling.</p>
+          <div><span class="eyebrow">Scope, ethics, and access</span><h2>A diagnostic resource, not a clinical tool</h2></div>
+          <p class="section-note">The benchmark evaluates how models interpret visible evidence. It does not assess the abilities, identities, or lived experiences of the people depicted.</p>
         </div>
         <div class="grid-3">
           <article class="card stripe-green">
-            <h3>Included</h3>
-            <p>Evaluation code, task runners, metrics, OpenAI and Gemini API backends, local vLLM-compatible serving, full-dataset configs, reproduction commands, and paper figure composites.</p>
+            <h3>Intended use</h3>
+            <p>Test-only evaluation of VLMs on images of individuals with limb deficiencies: evidence detection, body-region attribution, and compatibility-style structured matching.</p>
           </article>
           <article class="card stripe-amber">
-            <h3>Supplied Separately</h3>
-            <p>Full benchmark data and source images are distributed through the review artifact channel, not through this code repository.</p>
+            <h3>Out of scope</h3>
+            <p>Clinical decisions, prosthesis prescription or recommendation, capability judgments about individuals, surveillance, and re-identification.</p>
           </article>
           <article class="card stripe-red">
-            <h3>Excluded</h3>
-            <p>Raw data, raw predictions, result files, logs, packaged artifacts, internal notes, hidden helper state, and non-anonymized paper files.</p>
+            <h3>Governance</h3>
+            <p>Approved by an institutional Human Research Ethics Committee (details withheld for anonymous review). Annotations, prompts, and derived metadata are released under CC BY-NC-SA 4.0. Source images follow the LDPose access terms and a non-commercial Data Use Agreement that prohibits re-identification and face recognition. Correction and removal requests are supported.</p>
           </article>
         </div>
       </div>
@@ -962,23 +1394,86 @@
     <section id="citation">
       <div class="shell">
         <div class="section-head">
-          <h2>Citation</h2>
-          <p class="section-note">Anonymous placeholder for review.</p>
+          <div><span class="eyebrow">Citation</span><h2>BibTeX</h2></div>
+          <p class="section-note">Anonymous placeholder during review.</p>
         </div>
-        <pre>@inproceedings{anonymous2026seeing,
-  title = {Seeing Is Not Enough: Evaluating Limb-Evidence Preservation in Vision-Language Models on Images of Individuals with Limb Deficiencies},
-  author = {Anonymous},
-  booktitle = {Submitted to NeurIPS 2026 Evaluations and Datasets Track},
-  year = {2026}
+        <pre>@inproceedings{anonymous2027inclusivevlm,
+  title     = {InclusiveVLM-LimbEvidence: Evaluating Vision-Language Models on Images of Individuals with Limb Deficiencies},
+  author    = {Anonymous},
+  booktitle = {Submitted to the International Conference on Learning Representations (ICLR)},
+  year      = {2027}
 }</pre>
       </div>
     </section>
   </main>
 
   <footer>
-    <div class="shell">
-      Anonymous reviewer artifact for InclusiveVLM-LEP.
-    </div>
+    <div class="shell">Anonymous reviewer artifact for InclusiveVLM-LimbEvidence. Faces in all figures are blurred.</div>
   </footer>
+
+  <div class="lightbox" id="lightbox" role="dialog" aria-label="Enlarged figure"><img alt=""></div>
+
+  <script>
+    (function () {
+      // Result table tabs
+      var tabs = document.querySelectorAll('.tab');
+      tabs.forEach(function (tab) {
+        tab.addEventListener('click', function () {
+          tabs.forEach(function (t) {
+            var on = t === tab;
+            t.setAttribute('aria-selected', on ? 'true' : 'false');
+            document.getElementById(t.getAttribute('aria-controls')).hidden = !on;
+          });
+        });
+      });
+
+      // Q&A controls
+      var items = Array.prototype.slice.call(document.querySelectorAll('details.qa'));
+      document.getElementById('qa-expand').addEventListener('click', function () { items.forEach(function (d) { if (!d.classList.contains('hidden')) d.open = true; }); });
+      document.getElementById('qa-collapse').addEventListener('click', function () { items.forEach(function (d) { d.open = false; }); });
+
+      var search = document.getElementById('qa-search');
+      search.addEventListener('input', function () {
+        var q = search.value.trim().toLowerCase();
+        var shown = 0;
+        items.forEach(function (d) {
+          var hit = !q || d.textContent.toLowerCase().indexOf(q) !== -1;
+          d.classList.toggle('hidden', !hit);
+          if (hit) shown++;
+          if (q && hit) d.open = true;
+        });
+        document.querySelectorAll('.qa-group').forEach(function (g) {
+          g.classList.toggle('hidden', !g.querySelector('details.qa:not(.hidden)'));
+        });
+        document.getElementById('qa-empty').style.display = shown ? 'none' : 'block';
+      });
+
+      // Open a question when linked directly, e.g. #q17
+      function openFromHash() {
+        var el = location.hash && document.getElementById(location.hash.slice(1));
+        if (el && el.tagName === 'DETAILS') { el.open = true; el.scrollIntoView(); }
+      }
+      window.addEventListener('hashchange', openFromHash);
+      openFromHash();
+
+      // Figure lightbox
+      var lb = document.getElementById('lightbox');
+      var lbImg = lb.querySelector('img');
+      document.querySelectorAll('a.zoom').forEach(function (a) {
+        a.addEventListener('click', function (e) {
+          if (window.innerWidth < 620) return;
+          e.preventDefault();
+          lbImg.src = a.getAttribute('href');
+          lbImg.alt = a.querySelector('img').alt;
+          lb.classList.add('open');
+        });
+      });
+      lb.addEventListener('click', function () { lb.classList.remove('open'); });
+      document.addEventListener('keydown', function (e) { if (e.key === 'Escape') lb.classList.remove('open'); });
+
+      // Print: open all answers
+      window.addEventListener('beforeprint', function () { items.forEach(function (d) { d.open = true; }); });
+    })();
+  </script>
 </body>
 </html>
